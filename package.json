@@ -1,0 +1,39 @@
+{
+  "name": "hr-sdk",
+  "version": "0.0.1",
+  "description": "A JavaScript library for Highrise bot.",
+  "main": "dist/highrise.js",
+  "module": "dist/highrise.esm.js",
+  "types": "dist/highrise.d.ts",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "start": "node dist/highrise.js",
+    "build": "tsc",
+    "prepublishOnly": "npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "highrise",
+    "highrise-js-sdk",
+    "highrise-sdk",
+    "chatbot",
+    "sdk"
+  ],
+  "author": "Gyanendra Kumar",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^22.4.1",
+    "@types/ws": "^8.5.12",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.4"
+  },
+  "dependencies": {
+    "axios": "^1.7.4",
+    "chalk": "^5.3.0",
+    "hr-sdk": "file:",
+    "ws": "^8.18.0"
+  }
+}
