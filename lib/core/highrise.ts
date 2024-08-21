@@ -1,24 +1,28 @@
 import { EventEmitter } from "stream";
 import WebSocket, { WebSocketServer } from 'ws';
 
-import {constant, eventRequest, eventResponse} from '../utils/constant';
+import { constant, eventRequest, eventResponse } from '../utils/constant';
 
 import RequestEvent from "./events/requestEvents/RequestEvents"
+import { MessageHandlerFactory } from "./events/EventFactory";
 
 export class Highrise extends EventEmitter {
   public ws: WebSocket | null;
   private keepaliveInterval: NodeJS.Timeout | null;
   public requestEvent: RequestEvent
-  constructor(private token: string, private roomId: string) {
+  private messageHandlerFactory: MessageHandlerFactory
+  constructor(private token: string, private roomId: string, public options?: any) {
     super();
     this.ws = null;
+    this.options = {};
     this.keepaliveInterval = null;
     this.requestEvent = new RequestEvent(this)
+    this.messageHandlerFactory = new MessageHandlerFactory(this);
   }
 
 
 
-  connect(token: string, roomId: string){
+  connect(token: string, roomId: string) {
     if ((!token || token === "") && (!this.token || this.token === "")) {
       console.error("[Aborted] Please supply a bot token in your configuration file.");
       return;
@@ -63,20 +67,18 @@ export class Highrise extends EventEmitter {
     this.ws.addEventListener('message', (message: any) => this.handleMessage(message));
     this.ws.addEventListener('close', this.close.bind(this));
     this.ws.addEventListener('error', (error: any) => this.errorHandler(error));
-    
+
   }
   handleMessage(message: MessageEvent<any>) {
-    // console.log("data ", JSON.parse(message.data));
     const data = JSON.parse(message.data);
-    console.log("event type: ", data._type);
-
-    if(data._type === 'Error'){
-      console.log("error event: ", data);
+    if (data._type === 'KeepaliveResponse') {
+      return;
     }
-
-    if(data?._type == eventResponse.ChatEvent){
-      console.log("entering chat event");
-      this.emit('chatCreate', data.user, data.message);
+    const handler = this.messageHandlerFactory.getHandler(data._type);
+    if (handler) {
+      handler.handle(data);
+    } else {
+      console.log("No handler for event type: ", data._type);
     }
   }
 
@@ -90,30 +92,4 @@ export class Highrise extends EventEmitter {
   errorHandler(error: ErrorEvent) {
     console.log("error", error.message);
   }
-
-  sendMessage(message: any) {
-    if (this.ws && this.ws.readyState === this.ws.OPEN) {
-      let payload;
-      if (message.whisper) {
-        payload = {
-          _type: eventRequest.ChatRequest,
-          message: message.message,
-          whisper_target_id: message.whisper_target_id,
-          rid: message.rid
-        };
-      } else {
-        console.log("meesage enter");
-        payload = {
-          _type: eventRequest.ChatRequest,
-          message: message.message,
-          rid: message.rid
-        };
-      }
-
-      this.ws.send(JSON.stringify(payload));
-    } else {
-      return console.error("WebSocket is not open. Message cannot be sent.");
-    }
-  }
-
 }

@@ -8,8 +8,8 @@ class HR {
     public on: (...args: any[]) => void;
     public connect: (token: string, roomId: string) => void;
 
-    constructor(token: string, roomId: string) {
-        this.highrise = new Highrise(token, roomId);
+    constructor(token: string, roomId: string, options: any = {}) {
+        this.highrise = new Highrise(token, roomId, options);
         this.connect = this.highrise.connect.bind(this.highrise);
         this.on = this.highrise.on.bind(this.highrise);
         this.requestEvent = this.highrise.requestEvent;

@@ -7,7 +7,6 @@ class RequestEvent {
 
     sendMessage(message: any) {
         if (this.hr.ws && this.hr.ws.readyState === this.hr.ws.OPEN) {
-            console.log("comingdf")
             let payload;
             if (message.whisper) {
                 payload = {
@@ -17,7 +16,6 @@ class RequestEvent {
                     rid: message.rid
                 };
             } else {
-                console.log("meesage enter");
                 payload = {
                     _type: eventRequest.ChatRequest,
                     message: message.message,
