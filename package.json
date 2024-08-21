@@ -2,9 +2,9 @@
   "name": "hr-sdk",
   "version": "0.0.1",
   "description": "A JavaScript library for Highrise bot.",
-  "main": "dist/highrise.js",
-  "module": "dist/highrise.esm.js",
-  "types": "dist/highrise.d.ts",
+  "main": "dist/index.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
   "files": [
     "dist",
     "README.md"
