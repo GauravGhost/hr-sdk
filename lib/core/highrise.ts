@@ -1,7 +1,7 @@
 import { EventEmitter } from "stream";
 import WebSocket, { WebSocketServer } from 'ws';
 
-import { constant, eventRequest, eventResponse } from '../utils/constant';
+import { constant, eventRequest } from '../utils/constant';
 
 import RequestEvent from "./events/requestEvents/RequestEvents"
 import { MessageHandlerFactory } from "./events/EventFactory";
@@ -22,7 +22,7 @@ export class Highrise extends EventEmitter {
 
 
 
-  connect(token: string, roomId: string) {
+  connect(token: string, roomId: string, cb: () => void) {
     if ((!token || token === "") && (!this.token || this.token === "")) {
       console.error("[Aborted] Please supply a bot token in your configuration file.");
       return;
@@ -42,7 +42,7 @@ export class Highrise extends EventEmitter {
         'api-token': this.token,
       },
     });
-    this.addEventListeners();
+    this.addEventListeners(cb);
   }
 
   #sendKeepalive() {
@@ -51,10 +51,10 @@ export class Highrise extends EventEmitter {
     }
   }
 
-  addEventListeners() {
+  addEventListeners(cb: () => void) {
     if (!this.ws) return;
     this.ws.addEventListener('open', () => {
-      console.log(`Connected the bot to the highrise`);
+      if(typeof cb == 'function') cb();
       this.#sendKeepalive();
 
       if (this.keepaliveInterval) {

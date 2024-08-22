@@ -2,6 +2,7 @@ import { EventEmitter } from "stream";
 import { eventResponse } from "../../utils/constant";
 import { ChatEventHandler } from "./responseEvents/ChatEventHandler";
 import { ErrorMessageHandler } from "./ErrorMessageHandler";
+import { SessionMetadataHandler } from "./responseEvents/SessionMetadataHandler";
 
 
 export interface IMessageHandler {
@@ -14,7 +15,8 @@ export class MessageHandlerFactory {
     constructor(emitter: EventEmitter) {
         this.handlers = {
             'Error': new ErrorMessageHandler(),
-            [eventResponse.ChatEvent]: new ChatEventHandler(emitter)
+            [eventResponse.ChatEvent]: new ChatEventHandler(emitter),
+            [eventResponse.SessionMetadata]: new SessionMetadataHandler(emitter)
         };
     }
 

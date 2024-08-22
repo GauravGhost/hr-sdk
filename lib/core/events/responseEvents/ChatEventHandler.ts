@@ -1,5 +1,6 @@
 import { EventEmitter } from "stream";
 import { IMessageHandler } from "../EventFactory";
+import { emitEvent } from "../../../utils/constant";
 
 
 export class ChatEventHandler implements IMessageHandler {
@@ -10,6 +11,6 @@ export class ChatEventHandler implements IMessageHandler {
     }
 
     handle(data: any): void {
-        this.emitter.emit('chatCreate', data.user, data.message);
+        this.emitter.emit(emitEvent.Chat, data.user, data.message);
     }
 }

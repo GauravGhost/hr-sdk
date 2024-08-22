@@ -6,7 +6,7 @@ class HR {
     private highrise: Highrise
     public requestEvent: RequestEvent
     public on: (...args: any[]) => void;
-    public connect: (token: string, roomId: string) => void;
+    public connect: (token: string, roomId: string, cb: () => void) => void;
 
     constructor(token: string, roomId: string, options: any = {}) {
         this.highrise = new Highrise(token, roomId, options);

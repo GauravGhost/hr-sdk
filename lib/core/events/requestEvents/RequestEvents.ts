@@ -1,32 +1,31 @@
 import { Highrise } from "../../highrise";
-import { eventRequest } from "../../../utils/constant";
+import { ChatHandler } from "./ChatHandler";
+import { EmoteHandler } from "./EmoteHandler";
+import RequestEventStrategy from "./RequestStrategy";
 
 class RequestEvent {
     constructor(private hr: Highrise) {
     }
+    message(message: string) {
+        const chatStrategy = new ChatHandler();
+        const handler = new RequestEventStrategy(this.hr, chatStrategy);
+        handler.execute({ message: message });
+    }
 
-    sendMessage(message: any) {
-        if (this.hr.ws && this.hr.ws.readyState === this.hr.ws.OPEN) {
-            let payload;
-            if (message.whisper) {
-                payload = {
-                    _type: eventRequest.ChatRequest,
-                    message: message.message,
-                    whisper_target_id: message.whisper_target_id,
-                    rid: message.rid
-                };
-            } else {
-                payload = {
-                    _type: eventRequest.ChatRequest,
-                    message: message.message,
-                    rid: message.rid
-                };
-            }
+    whisper(message: string, whisperTargetId: string) {
+        const chatStrategy = new ChatHandler();
+        const handler = new RequestEventStrategy(this.hr, chatStrategy);
+        handler.execute({ message, whisper: true, whisperTargetId});
+    }
 
-            this.hr.ws.send(JSON.stringify(payload));
-        } else {
-            return console.error("WebSocket is not open. Message cannot be sent.");
-        }
+    emote(emoteId: string, targetUserId?: string) {
+        const emoteStrategy = new EmoteHandler();
+        const handler = new RequestEventStrategy(this.hr, emoteStrategy);
+        handler.execute({emoteId, targetUserId});
+    }
+
+    walk(){
+        
     }
 }
 export default RequestEvent;

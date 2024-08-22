@@ -75,3 +75,18 @@ export const eventResponse = {
     UserMovedEvent: 'UserMovedEvent',
     VoiceEvent: 'VoiceEvent'
 };
+
+
+export const emitEvent = {
+    Ready: 'Ready',
+    PlayerJoin: 'PlayerJoin',
+    PlayerLeft: 'PlayerLeft',
+    Chat: 'Chat',
+    Metadata: 'Metadata',
+}
+
+export const cacheKeys = {
+    owner_id: 'owner_id',
+    room_name: 'room_name',
+    bot_user_id: 'bot_user_id',
+}
