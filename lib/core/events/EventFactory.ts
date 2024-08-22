@@ -3,6 +3,8 @@ import { eventResponse } from "../../utils/constant";
 import { ChatEventHandler } from "./responseEvents/ChatEventHandler";
 import { ErrorMessageHandler } from "./ErrorMessageHandler";
 import { SessionMetadataHandler } from "./responseEvents/SessionMetadataHandler";
+import { PlayerJoinHandler } from "./responseEvents/PlayerJoinHandler";
+import { PlayerLeftHandler } from "./responseEvents/PlayerLeftHandler";
 
 
 export interface IMessageHandler {
@@ -16,7 +18,9 @@ export class MessageHandlerFactory {
         this.handlers = {
             'Error': new ErrorMessageHandler(),
             [eventResponse.ChatEvent]: new ChatEventHandler(emitter),
-            [eventResponse.SessionMetadata]: new SessionMetadataHandler(emitter)
+            [eventResponse.SessionMetadata]: new SessionMetadataHandler(emitter),
+            [eventResponse.UserJoinedEvent]: new PlayerJoinHandler(emitter),
+            [eventResponse.UserLeftEvent]: new PlayerLeftHandler(emitter),
         };
     }
 

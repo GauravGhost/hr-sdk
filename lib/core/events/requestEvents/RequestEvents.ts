@@ -24,8 +24,6 @@ class RequestEvent {
         handler.execute({emoteId, targetUserId});
     }
 
-    walk(){
-        
-    }
+    walk(){}
 }
 export default RequestEvent;
