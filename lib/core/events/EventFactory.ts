@@ -5,6 +5,8 @@ import { ErrorMessageHandler } from "./ErrorMessageHandler";
 import { SessionMetadataHandler } from "./responseEvents/SessionMetadataHandler";
 import { PlayerJoinHandler } from "./responseEvents/PlayerJoinHandler";
 import { PlayerLeftHandler } from "./responseEvents/PlayerLeftHandler";
+import { PlayerMovementHandler } from "./responseEvents/PlayerMovementHandler";
+import { AnchorHitResponseHandler } from "./responseEvents/AnchorHitResponseHandler";
 
 
 export interface IMessageHandler {
@@ -21,6 +23,8 @@ export class MessageHandlerFactory {
             [eventResponse.SessionMetadata]: new SessionMetadataHandler(emitter),
             [eventResponse.UserJoinedEvent]: new PlayerJoinHandler(emitter),
             [eventResponse.UserLeftEvent]: new PlayerLeftHandler(emitter),
+            [eventResponse.UserMovedEvent]: new PlayerMovementHandler(emitter),
+            [eventResponse.AnchorHitResponse]: new AnchorHitResponseHandler(emitter),
         };
     }
 

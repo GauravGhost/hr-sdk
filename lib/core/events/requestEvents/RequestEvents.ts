@@ -1,4 +1,5 @@
 import { Highrise } from "../../highrise";
+import { AnchoHitHandler } from "./AnchoHitHandler";
 import { ChatHandler } from "./ChatHandler";
 import { EmoteHandler } from "./EmoteHandler";
 import RequestEventStrategy from "./RequestStrategy";
@@ -24,6 +25,10 @@ class RequestEvent {
         handler.execute({emoteId, targetUserId});
     }
 
-    walk(){}
+    sit(entityId: string, anchorIx: number = 0){
+        const anchorHitStrategy = new AnchoHitHandler();
+        const handler = new RequestEventStrategy(this.hr, anchorHitStrategy);
+        handler.execute({entityId, anchorIx})
+    }
 }
 export default RequestEvent;

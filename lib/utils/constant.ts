@@ -82,6 +82,8 @@ export const emitEvent = {
     PlayerJoin: 'PlayerJoin',
     PlayerLeft: 'PlayerLeft',
     Chat: 'Chat',
+    PlayerMovement: "PlayerMovement",
+    PlayerSit: "PlayerSit",
 }
 
 export const cacheKeys = {
