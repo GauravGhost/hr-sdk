@@ -1,7 +1,7 @@
 import { EventEmitter } from "stream";
-import { eventResponse } from "../../utils/constant";
+import { emitEvent, eventResponse } from "../../utils/constant";
 import { ChatEventHandler } from "./responseEvents/ChatEventHandler";
-import { ErrorMessageHandler } from "./ErrorMessageHandler";
+import { ErrorMessageHandler } from "./responseEvents/ErrorMessageHandler";
 import { SessionMetadataHandler } from "./responseEvents/SessionMetadataHandler";
 import { PlayerJoinHandler } from "./responseEvents/PlayerJoinHandler";
 import { PlayerLeftHandler } from "./responseEvents/PlayerLeftHandler";
@@ -13,12 +13,12 @@ export interface IMessageHandler {
     handle(data: any): void;
 }
 
-export class MessageHandlerFactory {
+export class ResponseEventFactory {
     private handlers: { [key: string]: IMessageHandler };
 
     constructor(emitter: EventEmitter) {
         this.handlers = {
-            'Error': new ErrorMessageHandler(),
+            [emitEvent.Error]: new ErrorMessageHandler(emitter),
             [eventResponse.ChatEvent]: new ChatEventHandler(emitter),
             [eventResponse.SessionMetadata]: new SessionMetadataHandler(emitter),
             [eventResponse.UserJoinedEvent]: new PlayerJoinHandler(emitter),

@@ -1,5 +1,5 @@
 import { EventEmitter } from "stream";
-import { IMessageHandler } from "../EventFactory";
+import { IMessageHandler } from "../ResponseEventFactory";
 import { cacheKeys, emitEvent } from "../../../utils/constant";
 import hrCache, {HRCache} from '../../../utils/cache';
 type room_info = {

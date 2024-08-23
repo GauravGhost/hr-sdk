@@ -84,6 +84,7 @@ export const emitEvent = {
     Chat: 'Chat',
     PlayerMovement: "PlayerMovement",
     PlayerSit: "PlayerSit",
+    Error: "Error"
 }
 
 export const cacheKeys = {

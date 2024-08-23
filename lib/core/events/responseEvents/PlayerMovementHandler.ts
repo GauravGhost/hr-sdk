@@ -1,5 +1,5 @@
 import { EventEmitter } from "stream";
-import { IMessageHandler } from "../EventFactory";
+import { IMessageHandler } from "../ResponseEventFactory";
 import hrCache, {HRCache} from '../../../utils/cache';
 import { emitEvent } from "../../../utils/constant";
 

@@ -1,8 +1,10 @@
+import { Wallet } from "../../../types/responseEventTypes";
 import { Highrise } from "../../highrise";
 import { AnchoHitHandler } from "./AnchoHitHandler";
 import { ChatHandler } from "./ChatHandler";
 import { EmoteHandler } from "./EmoteHandler";
-import RequestEventStrategy from "./RequestStrategy";
+import RequestEventStrategy, { RequestEventWithPromiseStrategy } from "./RequestStrategy";
+import { WalletHandler } from "./WalletHandler";
 
 class RequestEvent {
     constructor(private hr: Highrise) {
@@ -29,6 +31,28 @@ class RequestEvent {
         const anchorHitStrategy = new AnchoHitHandler();
         const handler = new RequestEventStrategy(this.hr, anchorHitStrategy);
         handler.execute({entityId, anchorIx})
+    }
+
+    async wallet(): Promise<Array<Wallet>> {
+        const walletStrategy = new WalletHandler();
+        const handler = new RequestEventWithPromiseStrategy(this.hr, walletStrategy);
+        const response = await handler.execute({});
+        return response.content;
+    }
+
+    async gold(){
+        const wallet = await this.wallet();
+        return wallet.find((token) => token.type === "gold");
+    }
+
+    async boostToken(){
+        const wallet = await this.wallet();
+        return wallet.find((token) => token.type === "room_boost_tokens");
+    }
+
+    async voiceToken(){
+        const wallet = await this.wallet();
+        return wallet.find((token) => token.type === "room_voice_tokens");
     }
 }
 export default RequestEvent;

@@ -1,35 +1,36 @@
 import { EventEmitter } from "stream";
 import WebSocket, { WebSocketServer } from 'ws';
 
-import { constant, eventRequest } from '../utils/constant';
+import { constant, emitEvent, eventRequest } from '../utils/constant';
 
 import RequestEvent from "./events/requestEvents/RequestEvents"
-import { MessageHandlerFactory } from "./events/EventFactory";
+import { ResponseEventFactory } from "./events/ResponseEventFactory";
+import { HighriseError } from "../utils/error";
 
 export class Highrise extends EventEmitter {
   public ws: WebSocket | null;
   private keepaliveInterval: NodeJS.Timeout | null;
   public requestEvent: RequestEvent
-  private messageHandlerFactory: MessageHandlerFactory
+  private responseEventFactory: ResponseEventFactory
   constructor(private token: string, private roomId: string, public options?: any) {
     super();
     this.ws = null;
     this.options = {};
     this.keepaliveInterval = null;
     this.requestEvent = new RequestEvent(this)
-    this.messageHandlerFactory = new MessageHandlerFactory(this);
+    this.responseEventFactory = new ResponseEventFactory(this);
   }
 
 
 
   connect(token: string, roomId: string, cb: () => void) {
     if ((!token || token === "") && (!this.token || this.token === "")) {
-      console.error("[Aborted] Please supply a bot token in your configuration file.");
+      this.emit(emitEvent.Error, new HighriseError("[Aborted] Please supply a bot token in your configuration file."));
       return;
     }
 
     if ((!roomId || roomId === "") && (!this.roomId || this.roomId === "")) {
-      console.error("[Aborted] Please supply a room ID in your configuration file.");
+      this.emit(emitEvent.Error, new HighriseError("[Aborted] Please supply a room ID in your configuration file."));
       return;
     }
 
@@ -74,7 +75,7 @@ export class Highrise extends EventEmitter {
     if (data._type === 'KeepaliveResponse') {
       return;
     }
-    const handler = this.messageHandlerFactory.getHandler(data._type);
+    const handler = this.responseEventFactory.getHandler(data._type);
     if (handler) {
       handler.handle(data);
     } else {
