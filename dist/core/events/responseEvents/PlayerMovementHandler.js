@@ -7,7 +7,7 @@ class PlayerMovementHandler {
         this.emitter = emitter;
     }
     handle(data) {
-        this.emitter.emit(constant_1.emitEvent.PlayerMovement, data);
+        this.emitter.emit(constant_1.emitEvent.PlayerMovement, data.user, data.position);
     }
 }
 exports.PlayerMovementHandler = PlayerMovementHandler;

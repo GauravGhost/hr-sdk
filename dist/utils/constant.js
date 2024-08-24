@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.cacheKeys = exports.emitEvent = exports.eventResponse = exports.eventRequest = exports.constant = void 0;
+exports.reactions = exports.playerFace = exports.cacheKeys = exports.emitEvent = exports.eventResponse = exports.eventRequest = exports.constant = void 0;
 exports.constant = {
     WEB_API_ENDPOINT: "https://webapi.highrise.game",
     WS_ENDPOINT: "wss://highrise.game/web/webapi"
@@ -90,4 +90,35 @@ exports.cacheKeys = {
     owner_id: 'owner_id',
     room_name: 'room_name',
     bot_user_id: 'bot_user_id',
+};
+exports.playerFace = {
+    BackLeft: 'BackLeft',
+    BackRight: 'BackRight',
+    FrontLeft: 'FrontLeft',
+    FrontRight: 'FrontRight'
+};
+exports.reactions = {
+    clap: "clap",
+    heart: "heart",
+    thumbs: "thumbs",
+    wave: "wave",
+    wink: "wink"
+};
+const moderationActions = {
+    kick: "kick",
+    ban: "ban",
+    unban: "unban",
+    mute: "mute",
+    unmute: "unmute"
+};
+const goldBars = {
+    gold_bar_1: "gold_bar_1",
+    gold_bar_5: "gold_bar_5",
+    gold_bar_10: "gold_bar_10",
+    gold_bar_50: "gold_bar_50",
+    gold_bar_100: "gold_bar_100",
+    gold_bar_500: "gold_bar_500",
+    gold_bar_1k: "gold_bar_1k",
+    gold_bar_5000: "gold_bar_5000",
+    gold_bar_10k: "gold_bar_10k"
 };

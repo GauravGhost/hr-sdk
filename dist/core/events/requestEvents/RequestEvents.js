@@ -23,10 +23,14 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const AnchoHitHandler_1 = require("./AnchoHitHandler");
+const error_1 = require("../../../utils/error");
+const AnchorHitHandler_1 = require("./AnchorHitHandler");
 const ChatHandler_1 = require("./ChatHandler");
 const EmoteHandler_1 = require("./EmoteHandler");
+const FloorHitHandler_1 = require("./FloorHitHandler");
 const RequestStrategy_1 = __importStar(require("./RequestStrategy"));
+const RoomUsersHandler_1 = require("./RoomUsersHandler");
+const TeleportHandler_1 = require("./TeleportHandler");
 const WalletHandler_1 = require("./WalletHandler");
 class RequestEvent {
     constructor(hr) {
@@ -37,18 +41,18 @@ class RequestEvent {
         const handler = new RequestStrategy_1.default(this.hr, chatStrategy);
         handler.execute({ message: message });
     }
-    whisper(message, whisperTargetId) {
+    whisper(data) {
         const chatStrategy = new ChatHandler_1.ChatHandler();
         const handler = new RequestStrategy_1.default(this.hr, chatStrategy);
-        handler.execute({ message, whisper: true, whisperTargetId });
+        handler.execute({ ...data, whisper: true });
     }
-    emote(emoteId, targetUserId) {
+    emote(data) {
         const emoteStrategy = new EmoteHandler_1.EmoteHandler();
         const handler = new RequestStrategy_1.default(this.hr, emoteStrategy);
-        handler.execute({ emoteId, targetUserId });
+        handler.execute(data);
     }
-    sit(entityId, anchorIx = 0) {
-        const anchorHitStrategy = new AnchoHitHandler_1.AnchoHitHandler();
+    sit({ entityId, anchorIx = 0 }) {
+        const anchorHitStrategy = new AnchorHitHandler_1.AnchorHitHandler();
         const handler = new RequestStrategy_1.default(this.hr, anchorHitStrategy);
         handler.execute({ entityId, anchorIx });
     }
@@ -69,6 +73,38 @@ class RequestEvent {
     async voiceToken() {
         const wallet = await this.wallet();
         return wallet.find((token) => token.type === "room_voice_tokens");
+    }
+    // x: number, y: number, z: number, facing: Facing = Facing.FrontLeft
+    async walk(data) {
+        const floorHitStrategy = new FloorHitHandler_1.FloorHitHandler();
+        const handler = new RequestStrategy_1.default(this.hr, floorHitStrategy);
+        handler.execute(data);
+    }
+    async teleport(data) {
+        const teleportStrategy = new TeleportHandler_1.TeleportHandler();
+        const handler = new RequestStrategy_1.default(this.hr, teleportStrategy);
+        handler.execute(data);
+    }
+    async roomUsers() {
+        const userStrategy = new RoomUsersHandler_1.RoomUsersHandler();
+        const handler = new RequestStrategy_1.RequestEventWithPromiseStrategy(this.hr, userStrategy);
+        const response = await handler.execute({});
+        return response.content;
+    }
+    async roomUser(username) {
+        try {
+            const users = await this.roomUsers();
+            const user = users.find((userData) => userData[0].username === username);
+            if (user) {
+                return user;
+            }
+            else {
+                throw new error_1.RequestError(`User with username "${username}" not found`);
+            }
+        }
+        catch (error) {
+            throw error;
+        }
     }
 }
 exports.default = RequestEvent;

@@ -88,3 +88,16 @@ export declare const cacheKeys: {
     room_name: string;
     bot_user_id: string;
 };
+export declare const playerFace: {
+    BackLeft: string;
+    BackRight: string;
+    FrontLeft: string;
+    FrontRight: string;
+};
+export declare const reactions: {
+    clap: string;
+    heart: string;
+    thumbs: string;
+    wave: string;
+    wink: string;
+};

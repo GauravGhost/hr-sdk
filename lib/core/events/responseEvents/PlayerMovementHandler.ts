@@ -12,6 +12,6 @@ export class PlayerMovementHandler implements IMessageHandler {
     }
 
     handle(data: any): void {
-        this.emitter.emit(emitEvent.PlayerMovement, data);
+        this.emitter.emit(emitEvent.PlayerMovement, data.user, data.position);
     }
 }
