@@ -1,6 +1,5 @@
-import { AnchorHitPayload, EmotePayload, FloorHitPayload, ReactionPayload, TeleportPayload, WhisperPayload } from "../../../types/types";
-import { Wallet } from "../../../types/types";
-import { Highrise } from "../../highrise";
+import { AnchorHitPayload, EmotePayload, FloorHitPayload, ReactionPayload, TeleportPayload, Wallet, WhisperPayload } from "../../types/types";
+import { Highrise } from "../highrise";
 declare class RequestEvent {
     private hr;
     constructor(hr: Highrise);

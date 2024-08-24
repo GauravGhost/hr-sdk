@@ -1,6 +1,5 @@
+import RequestEvent from "./events/RequestEventsHandler";
 import { Highrise } from "./highrise";
-import RequestEvent from "./events/requestEvents/RequestEvents";
-
 
 class HR {
     private highrise: Highrise

@@ -1,18 +1,18 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AnchoHitHandler = void 0;
+exports.ReactionHandler = void 0;
 const constant_1 = require("../../../utils/constant");
-class AnchoHitHandler {
+class ReactionHandler {
     createPayload(data) {
         if (!data) {
             throw new Error("data cannot be empty");
         }
         const payload = {
-            _type: constant_1.eventRequest.AnchorHitRequest,
-            anchor: { entity_id: data.entityId, anchor_ix: data.anchorIx },
-            rid: null,
+            _type: constant_1.eventRequest.ReactionRequest,
+            reaction: data.reaction,
+            target_user_id: data.targetUserId
         };
         return payload;
     }
 }
-exports.AnchoHitHandler = AnchoHitHandler;
+exports.ReactionHandler = ReactionHandler;

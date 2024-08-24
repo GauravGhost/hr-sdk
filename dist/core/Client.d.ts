@@ -1,4 +1,4 @@
-import RequestEvent from "./events/requestEvents/RequestEvents";
+import RequestEvent from "./events/RequestEventsHandler";
 declare class HR {
     private highrise;
     requestEvent: RequestEvent;

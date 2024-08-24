@@ -13,9 +13,9 @@ exports.Highrise = void 0;
 const stream_1 = require("stream");
 const ws_1 = __importDefault(require("ws"));
 const constant_1 = require("../utils/constant");
-const RequestEvents_1 = __importDefault(require("./events/requestEvents/RequestEvents"));
-const ResponseEventFactory_1 = require("./events/ResponseEventFactory");
+const ResponseEvent_1 = require("./events/ResponseEvent");
 const error_1 = require("../utils/error");
+const RequestEventsHandler_1 = __importDefault(require("./events/RequestEventsHandler"));
 class Highrise extends stream_1.EventEmitter {
     constructor(token, roomId, options) {
         super();
@@ -26,8 +26,8 @@ class Highrise extends stream_1.EventEmitter {
         this.ws = null;
         this.options = {};
         this.keepaliveInterval = null;
-        this.requestEvent = new RequestEvents_1.default(this);
-        this.responseEventFactory = new ResponseEventFactory_1.ResponseEventFactory(this);
+        this.requestEvent = new RequestEventsHandler_1.default(this);
+        this.responseEventFactory = new ResponseEvent_1.ResponseEventFactory(this);
     }
     connect(token, roomId, cb) {
         if ((!token || token === "") && (!this.token || this.token === "")) {

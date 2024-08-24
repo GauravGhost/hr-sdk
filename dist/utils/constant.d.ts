@@ -84,9 +84,9 @@ export declare const emitEvent: {
     Error: string;
 };
 export declare const cacheKeys: {
-    owner_id: string;
-    room_name: string;
-    bot_user_id: string;
+    ownerId: string;
+    roomName: string;
+    botUserId: string;
 };
 export declare const playerFace: {
     BackLeft: string;

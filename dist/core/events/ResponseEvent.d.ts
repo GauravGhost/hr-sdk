@@ -1,5 +1,5 @@
 import { EventEmitter } from "stream";
-import { ChatEvent, SessionMetadataEvent, UserMovedEvent } from "../../types/types";
+import { AnchorHitPayload, ChatEvent, PlayerJoinedEvent, PlayerLeftEvent, SessionMetadataEvent, UserMovedEvent } from "../../types/types";
 export interface IMessageHandler {
     handle(data: any): void;
 }
@@ -9,8 +9,18 @@ export declare class ResponseEventFactory {
     getHandler(type: string): IMessageHandler | null;
 }
 /**
- * =============================== Event Handler ===============================
+ * @class ErrorMessageHandler
+ * @implements {IMessageHandler}
+ * @description Handles error messages by emitting them through an EventEmitter.
  */
+export declare class ErrorMessageHandler implements IMessageHandler {
+    private emitter;
+    constructor(emitter: EventEmitter);
+    handle(data: any): void;
+}
+/**
+ * =============================== Event Handler ===============================
+*/
 export declare class SessionMetadataHandler implements IMessageHandler {
     private emitter;
     private cache;
@@ -20,27 +30,22 @@ export declare class SessionMetadataHandler implements IMessageHandler {
 export declare class AnchorHitResponseHandler implements IMessageHandler {
     private emitter;
     constructor(emitter: EventEmitter);
-    handle(data: any): void;
+    handle(data: AnchorHitPayload): void;
 }
 export declare class ChatEventHandler implements IMessageHandler {
     private emitter;
     constructor(emitter: EventEmitter);
     handle(data: ChatEvent): void;
 }
-export declare class ErrorMessageHandler implements IMessageHandler {
-    private emitter;
-    constructor(emitter: EventEmitter);
-    handle(data: any): void;
-}
 export declare class PlayerJoinHandler implements IMessageHandler {
     private emitter;
     constructor(emitter: EventEmitter);
-    handle(data: any): void;
+    handle(data: PlayerJoinedEvent): void;
 }
 export declare class PlayerLeftHandler implements IMessageHandler {
     private emitter;
     constructor(emitter: EventEmitter);
-    handle(data: any): void;
+    handle(data: PlayerLeftEvent): void;
 }
 export declare class PlayerMovementHandler implements IMessageHandler {
     private emitter;

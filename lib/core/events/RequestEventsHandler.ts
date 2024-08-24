@@ -1,15 +1,9 @@
-import { AnchorHitPayload, EmotePayload, Facing, FloorHitPayload, TeleportPayload, WhisperPayload } from "../../../types/requestEventTypes";
-import { Wallet } from "../../../types/responseEventTypes";
-import { RequestError } from "../../../utils/error";
-import { Highrise } from "../../highrise";
-import { AnchorHitHandler } from "./AnchorHitHandler";
-import { ChatHandler } from "./ChatHandler";
-import { EmoteHandler } from "./EmoteHandler";
-import { FloorHitHandler } from "./FloorHitHandler";
-import RequestEventStrategy, { RequestEventWithPromiseStrategy } from "./RequestStrategy";
-import { RoomUsersHandler } from "./RoomUsersHandler";
-import { TeleportHandler } from "./TeleportHandler";
-import { WalletHandler } from "./WalletHandler";
+import { AnchorHitPayload, EmotePayload, FloorHitPayload, ReactionPayload, TeleportPayload, Wallet, WhisperPayload } from "../../types/types";
+import { RequestError } from "../../utils/error";
+import { Highrise } from "../highrise";
+import RequestEventStrategy, { AnchorHitHandler, ChatHandler, EmoteHandler, FloorHitHandler, ReactionHandler, RequestEventWithPromiseStrategy, RoomUsersHandler, TeleportHandler, WalletHandler } from "./RequestEvent";
+
+
 
 class RequestEvent {
     constructor(private hr: Highrise) {
@@ -72,16 +66,22 @@ class RequestEvent {
         handler.execute(data);
     }
 
-    async roomUsers(): Promise<any> {
+    async reaction(data: ReactionPayload){
+        const reactionStrategy = new ReactionHandler();
+        const handler = new RequestEventStrategy(this.hr, reactionStrategy);
+        handler.execute(data);
+    }
+    
+    async getRooomUsers(): Promise<any> {
         const userStrategy = new RoomUsersHandler();
         const handler = new RequestEventWithPromiseStrategy(this.hr, userStrategy);
         const response = await handler.execute({});
         return response.content;
     }
 
-    async roomUser(username: string) {
+    async getRoomUserByUsername(username: string) {
         try {
-            const users = await this.roomUsers();
+            const users = await this.getRooomUsers();
             const user = users.find((userData: any) => userData[0].username === username);
             if (user) {
                 return user;
@@ -92,5 +92,20 @@ class RequestEvent {
             throw error;
         }
     }
+
+    async getRoomUserByUserId(userId: string) {
+        try {
+            const users = await this.getRooomUsers();
+            const user = users.find((userData: any) => userData[0].id === userId);
+            if (user) {
+                return user;
+            } else {
+                throw new RequestError(`User with userId "${userId}" not found`);
+            }
+        } catch (error) {
+            throw error;
+        }
+    }
+
 }
 export default RequestEvent;

@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PlayerMovementHandler = exports.PlayerLeftHandler = exports.PlayerJoinHandler = exports.ErrorMessageHandler = exports.ChatEventHandler = exports.AnchorHitResponseHandler = exports.SessionMetadataHandler = exports.ResponseEventFactory = void 0;
+exports.PlayerMovementHandler = exports.PlayerLeftHandler = exports.PlayerJoinHandler = exports.ChatEventHandler = exports.AnchorHitResponseHandler = exports.SessionMetadataHandler = exports.ErrorMessageHandler = exports.ResponseEventFactory = void 0;
 const constant_1 = require("../../utils/constant");
 const cache_1 = __importDefault(require("../../utils/cache"));
 const utils_1 = require("../../utils/utils");
@@ -25,8 +25,22 @@ class ResponseEventFactory {
 }
 exports.ResponseEventFactory = ResponseEventFactory;
 /**
- * =============================== Event Handler ===============================
+ * @class ErrorMessageHandler
+ * @implements {IMessageHandler}
+ * @description Handles error messages by emitting them through an EventEmitter.
  */
+class ErrorMessageHandler {
+    constructor(emitter) {
+        this.emitter = emitter;
+    }
+    handle(data) {
+        this.emitter.emit(constant_1.emitEvent.Error, data.message);
+    }
+}
+exports.ErrorMessageHandler = ErrorMessageHandler;
+/**
+ * =============================== Event Handler ===============================
+*/
 class SessionMetadataHandler {
     constructor(emitter) {
         this.emitter = emitter;
@@ -47,6 +61,7 @@ class AnchorHitResponseHandler {
         this.emitter = emitter;
     }
     handle(data) {
+        data = (0, utils_1.convertKeysToCamelCase)(data);
         this.emitter.emit(constant_1.emitEvent.PlayerSit, data);
     }
 }
@@ -61,20 +76,12 @@ class ChatEventHandler {
     }
 }
 exports.ChatEventHandler = ChatEventHandler;
-class ErrorMessageHandler {
-    constructor(emitter) {
-        this.emitter = emitter;
-    }
-    handle(data) {
-        this.emitter.emit(data.message);
-    }
-}
-exports.ErrorMessageHandler = ErrorMessageHandler;
 class PlayerJoinHandler {
     constructor(emitter) {
         this.emitter = emitter;
     }
     handle(data) {
+        data = (0, utils_1.convertKeysToCamelCase)(data);
         this.emitter.emit(constant_1.emitEvent.PlayerJoin, data.user);
     }
 }
@@ -84,7 +91,8 @@ class PlayerLeftHandler {
         this.emitter = emitter;
     }
     handle(data) {
-        this.emitter.emit(constant_1.emitEvent.PlayerLeft, data.user);
+        data = (0, utils_1.convertKeysToCamelCase)(data);
+        this.emitter.emit(constant_1.emitEvent.PlayerLeft, { user: data.user });
     }
 }
 exports.PlayerLeftHandler = PlayerLeftHandler;
@@ -93,6 +101,7 @@ class PlayerMovementHandler {
         this.emitter = emitter;
     }
     handle(data) {
+        data = (0, utils_1.convertKeysToCamelCase)(data);
         this.emitter.emit(constant_1.emitEvent.PlayerMovement, { user: data.user, position: data.position });
     }
 }

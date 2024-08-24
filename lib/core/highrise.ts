@@ -1,11 +1,11 @@
 import { EventEmitter } from "stream";
 import WebSocket, { WebSocketServer } from 'ws';
 
-import { constant, emitEvent, eventRequest } from '../utils/constant';
+import { constant, eventRequest, eventResponse } from '../utils/constant';
 
-import RequestEvent from "./events/requestEvents/RequestEvents"
-import { ResponseEventFactory } from "./events/ResponseEventFactory";
+import { ResponseEventFactory } from "./events/ResponseEvent";
 import { HighriseError } from "../utils/error";
+import RequestEvent from "./events/RequestEventsHandler";
 
 export class Highrise extends EventEmitter {
   public ws: WebSocket | null;
@@ -25,12 +25,12 @@ export class Highrise extends EventEmitter {
 
   connect(token: string, roomId: string, cb: () => void) {
     if ((!token || token === "") && (!this.token || this.token === "")) {
-      this.emit(emitEvent.Error, new HighriseError("[Aborted] Please supply a bot token in your configuration file."));
+      this.emit(eventResponse.Error, new HighriseError("[Aborted] Please supply a bot token in your configuration file."));
       return;
     }
 
     if ((!roomId || roomId === "") && (!this.roomId || this.roomId === "")) {
-      this.emit(emitEvent.Error, new HighriseError("[Aborted] Please supply a room ID in your configuration file."));
+      this.emit(eventResponse.Error, new HighriseError("[Aborted] Please supply a room ID in your configuration file."));
       return;
     }
 

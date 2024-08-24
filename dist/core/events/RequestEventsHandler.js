@@ -23,43 +23,35 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const error_1 = require("../../../utils/error");
-const AnchorHitHandler_1 = require("./AnchorHitHandler");
-const ChatHandler_1 = require("./ChatHandler");
-const EmoteHandler_1 = require("./EmoteHandler");
-const FloorHitHandler_1 = require("./FloorHitHandler");
-const ReactionHandler_1 = require("./ReactionHandler");
-const RequestStrategy_1 = __importStar(require("./RequestStrategy"));
-const RoomUsersHandler_1 = require("./RoomUsersHandler");
-const TeleportHandler_1 = require("./TeleportHandler");
-const WalletHandler_1 = require("./WalletHandler");
+const error_1 = require("../../utils/error");
+const RequestEvent_1 = __importStar(require("./RequestEvent"));
 class RequestEvent {
     constructor(hr) {
         this.hr = hr;
     }
     message(message) {
-        const chatStrategy = new ChatHandler_1.ChatHandler();
-        const handler = new RequestStrategy_1.default(this.hr, chatStrategy);
+        const chatStrategy = new RequestEvent_1.ChatHandler();
+        const handler = new RequestEvent_1.default(this.hr, chatStrategy);
         handler.execute({ message: message });
     }
     whisper(data) {
-        const chatStrategy = new ChatHandler_1.ChatHandler();
-        const handler = new RequestStrategy_1.default(this.hr, chatStrategy);
+        const chatStrategy = new RequestEvent_1.ChatHandler();
+        const handler = new RequestEvent_1.default(this.hr, chatStrategy);
         handler.execute({ ...data, whisper: true });
     }
     emote(data) {
-        const emoteStrategy = new EmoteHandler_1.EmoteHandler();
-        const handler = new RequestStrategy_1.default(this.hr, emoteStrategy);
+        const emoteStrategy = new RequestEvent_1.EmoteHandler();
+        const handler = new RequestEvent_1.default(this.hr, emoteStrategy);
         handler.execute(data);
     }
     sit({ entityId, anchorIx = 0 }) {
-        const anchorHitStrategy = new AnchorHitHandler_1.AnchorHitHandler();
-        const handler = new RequestStrategy_1.default(this.hr, anchorHitStrategy);
+        const anchorHitStrategy = new RequestEvent_1.AnchorHitHandler();
+        const handler = new RequestEvent_1.default(this.hr, anchorHitStrategy);
         handler.execute({ entityId, anchorIx });
     }
     async wallet() {
-        const walletStrategy = new WalletHandler_1.WalletHandler();
-        const handler = new RequestStrategy_1.RequestEventWithPromiseStrategy(this.hr, walletStrategy);
+        const walletStrategy = new RequestEvent_1.WalletHandler();
+        const handler = new RequestEvent_1.RequestEventWithPromiseStrategy(this.hr, walletStrategy);
         const response = await handler.execute({});
         return response.content;
     }
@@ -77,23 +69,23 @@ class RequestEvent {
     }
     // x: number, y: number, z: number, facing: Facing = Facing.FrontLeft
     async walk(data) {
-        const floorHitStrategy = new FloorHitHandler_1.FloorHitHandler();
-        const handler = new RequestStrategy_1.default(this.hr, floorHitStrategy);
+        const floorHitStrategy = new RequestEvent_1.FloorHitHandler();
+        const handler = new RequestEvent_1.default(this.hr, floorHitStrategy);
         handler.execute(data);
     }
     async teleport(data) {
-        const teleportStrategy = new TeleportHandler_1.TeleportHandler();
-        const handler = new RequestStrategy_1.default(this.hr, teleportStrategy);
+        const teleportStrategy = new RequestEvent_1.TeleportHandler();
+        const handler = new RequestEvent_1.default(this.hr, teleportStrategy);
         handler.execute(data);
     }
     async reaction(data) {
-        const reactionStrategy = new ReactionHandler_1.ReactionHandler();
-        const handler = new RequestStrategy_1.default(this.hr, reactionStrategy);
+        const reactionStrategy = new RequestEvent_1.ReactionHandler();
+        const handler = new RequestEvent_1.default(this.hr, reactionStrategy);
         handler.execute(data);
     }
     async getRooomUsers() {
-        const userStrategy = new RoomUsersHandler_1.RoomUsersHandler();
-        const handler = new RequestStrategy_1.RequestEventWithPromiseStrategy(this.hr, userStrategy);
+        const userStrategy = new RequestEvent_1.RoomUsersHandler();
+        const handler = new RequestEvent_1.RequestEventWithPromiseStrategy(this.hr, userStrategy);
         const response = await handler.execute({});
         return response.content;
     }

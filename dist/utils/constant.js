@@ -87,9 +87,9 @@ exports.emitEvent = {
     Error: "Error"
 };
 exports.cacheKeys = {
-    owner_id: 'owner_id',
-    room_name: 'room_name',
-    bot_user_id: 'bot_user_id',
+    ownerId: 'ownerId',
+    roomName: 'roomName',
+    botUserId: 'botUserId',
 };
 exports.playerFace = {
     BackLeft: 'BackLeft',
