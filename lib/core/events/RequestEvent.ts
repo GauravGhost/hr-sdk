@@ -359,7 +359,7 @@ export class GetConversationsHandler implements RequestStrategy {
         const payload = {
             _type: eventRequest.GetUserOutfitRequest,
             not_joined: data.notJoined,
-            lastId: data.lastId,
+            last_id: data.lastId,
             rid: generateRid(),
         }
         return payload;
@@ -468,7 +468,7 @@ export class TipUserHandler implements RequestStrategy {
         const payload = {
             _type: eventRequest.TipUserRequest,
             user_id: data.userId,
-            goldBar: data.goldBar,
+            gold_bar: data.goldBar,
             rid: generateRid(),
         }
         return payload;

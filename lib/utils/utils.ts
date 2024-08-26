@@ -20,3 +20,23 @@ export function convertKeysToCamelCase(obj: any): any {
         return obj;
     }
 }
+
+type AsyncFunction<T> = (...args: any[]) => Promise<T>;
+type SyncFunction<T> = (...args: any[]) => T;
+
+export function catchFn<T>(fn: SyncFunction<T> | AsyncFunction<T>): (...args: any[]) => T | Promise<T> {
+  return function(...args: any[]): T | Promise<T> {
+    try {
+      const result = fn(...args);
+      if (result instanceof Promise) {
+        return result.catch(error => {
+          throw error;
+        });
+      } else {
+        return result;
+      }
+    } catch (error) {
+      throw error;
+    }
+  };
+}

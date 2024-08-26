@@ -53,6 +53,6 @@ export class ResponseError extends BaseError {
 
 export class PayloadError extends BaseError{
     constructor(message: string){
-        super('PayloadError', message);
+        super('ValidationError', message);
     }
 }

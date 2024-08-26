@@ -36,6 +36,35 @@ export enum PaymentMethod {
     bot_wallet_only = "bot_wallet_only"
 }
 
+export enum GoldBars {
+    goldBar1 = "gold_bar_1",
+    goldBar5 = "gold_bar_5",
+    goldBar10 = "gold_bar_10",
+    goldBar50 = "gold_bar_50",
+    goldBar100 = "gold_bar_100",
+    goldBar500 = "gold_bar_500",
+    goldBar1k = "gold_bar_1k",
+    goldBar5000 = "gold_bar_5000",
+    goldBar10k = "gold_bar_10k"
+};
+
+export enum WalletType {
+    gold = "gold",
+    roomBoostTokens = "room_boost_tokens",
+    roomVoiceTokens = "room_voice_tokens"
+}
+
+export enum PaymentResult  {
+    success = "success",
+    insufficientFunds = "insufficient_funds",
+    onlyTokenBought = "only_token_bought",
+}
+
+export enum MessageType {
+    text = "text",
+    invite = "invite"
+}
+
 export interface Position {
     x: number,
     y: number,
@@ -71,7 +100,7 @@ export interface Conversation {
     didJoin: boolean;
     unreadCount: number;
     muted: boolean;
-    member_ids: string[];
+    memberIds: string[];
     name: string;
     ownerId: string;
 }
@@ -85,33 +114,12 @@ export interface Message {
     category: MessageType;
 }
 
-export enum GoldBars {
-    gold_bar_1 = "gold_bar_1",
-    gold_bar_5 = "gold_bar_5",
-    gold_bar_10 = "gold_bar_10",
-    gold_bar_50 = "gold_bar_50",
-    gold_bar_100 = "gold_bar_100",
-    gold_bar_500 = "gold_bar_500",
-    gold_bar_1k = "gold_bar_1k",
-    gold_bar_5000 = "gold_bar_5000",
-    gold_bar_10k = "gold_bar_10k"
-};
-
-export enum PaymentResult  {
-    success = "success",
-    insufficientFunds = "insufficient_funds",
-    onlyTokenBought = "only_token_bought",
-}
 
 export interface RoomInfo {
     roomName: string;
     ownerId: string;
 }
 
-export enum MessageType {
-    text = "text",
-    invite = "invite"
-}
 
 export interface AnchorPosition {
     entityId: string;
@@ -124,7 +132,7 @@ export interface EmotePayload {
 }
 
 export interface Wallet {
-    type: string;
+    type: WalletType;
     amount: number
 }
 
@@ -164,7 +172,7 @@ export interface ReactionPayload {
 export interface ChannelPayload {
     message: string,
     tags: Set<string>
-    only_to: Set<string>
+    onlyTo: Set<string>
 }
 
 export interface ModerateRoomPayload {
@@ -372,6 +380,7 @@ export interface UserMovedEvent {
 
 // export interface VoiceUser{
 //     user: User,
+
 
 // }
 // export interface VoiceEvent {

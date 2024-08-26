@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.generateRid = generateRid;
 exports.convertKeysToCamelCase = convertKeysToCamelCase;
+exports.catchFn = catchFn;
 function generateRid() {
     return Math.random().toString(36).substring(2, 15) +
         Math.random().toString(36).substring(2, 15);
@@ -23,4 +24,22 @@ function convertKeysToCamelCase(obj) {
     else {
         return obj;
     }
+}
+function catchFn(fn) {
+    return function (...args) {
+        try {
+            const result = fn(...args);
+            if (result instanceof Promise) {
+                return result.catch(error => {
+                    throw error;
+                });
+            }
+            else {
+                return result;
+            }
+        }
+        catch (error) {
+            throw error;
+        }
+    };
 }
