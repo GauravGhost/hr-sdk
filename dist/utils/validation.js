@@ -1,8 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.setOutfitSchema = exports.buyItemSchema = exports.tipUserSchema = exports.userSchema = exports.roomPermissionSchema = exports.messageSchema = exports.conversationSchema = exports.currencyItemSchema = exports.anchorPositionSchema = exports.positionSchema = exports.itemSchema = void 0;
+exports.getRoomPrivilegeSchema = exports.moderationSchema = exports.teleportSchema = exports.floorHitSchema = exports.anchorSchema = exports.emoteSchema = exports.whisperSchema = exports.setOutfitSchema = exports.buyItemSchema = exports.tipUserSchema = exports.userSchema = exports.roomPermissionSchema = exports.messageSchema = exports.conversationSchema = exports.currencyItemSchema = exports.positionSchema = exports.itemSchema = exports.validateAndThrow = void 0;
 exports.validate = validate;
 exports.validateEnum = validateEnum;
+const error_1 = require("./error");
 var option;
 (function (option) {
     option["required"] = "required";
@@ -31,6 +32,12 @@ function validateEnum(value, enumType) {
     }
     return null;
 }
+const validateAndThrow = (validationResult) => {
+    if (validationResult) {
+        throw new error_1.PayloadError(validationResult);
+    }
+};
+exports.validateAndThrow = validateAndThrow;
 /**
  * =================== Schema Definition =================
  */
@@ -46,10 +53,6 @@ exports.positionSchema = {
     y: option.required,
     z: option.required,
     facing: option.required,
-};
-exports.anchorPositionSchema = {
-    entityId: option.required,
-    anchor_id: option.required,
 };
 exports.currencyItemSchema = {
     type: option.required,
@@ -89,4 +92,34 @@ exports.buyItemSchema = {
 };
 exports.setOutfitSchema = {
     outfit: option.required,
+};
+exports.whisperSchema = {
+    message: option.required,
+    whisperTargetId: option.required,
+};
+exports.emoteSchema = {
+    emoteId: option.required,
+    targetUserId: option.required
+};
+exports.anchorSchema = {
+    entityId: option.required,
+    anchorIx: option.optional
+};
+exports.floorHitSchema = {
+    facing: option.optional,
+    x: option.required,
+    y: option.required,
+    z: option.required,
+};
+exports.teleportSchema = {
+    userId: option.required,
+    destination: option.required
+};
+exports.moderationSchema = {
+    userId: option.required,
+    moderationAction: option.required,
+    actionLength: option.optional
+};
+exports.getRoomPrivilegeSchema = {
+    userId: option.required
 };

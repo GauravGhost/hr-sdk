@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.BuyItemHandler = exports.SetOutfitHandler = exports.GetInventoryHandler = exports.TipUserHandler = exports.BuyRoomBoostHandler = exports.BuyVoiceTimeHandler = exports.LeaveConversationHandler = exports.GetMessageHandler = exports.SendBulkMessageHandler = exports.SendMessageHandler = exports.GetConversationsHandler = exports.GetUserOutfitHandler = exports.RemoveSpeakerHandler = exports.InviteSpeakerHandler = exports.CheckVoideChatHandler = exports.GetBackPackHandler = exports.MoveUserToRoomHandler = exports.ChangeRoomPrevilegeHandler = exports.GetRoomPrivilegeHandler = exports.ModerateRoomHandler = exports.ChannelHandler = exports.WalletHandler = exports.TeleportHandler = exports.RoomUsersHandler = exports.ReactionHandler = exports.FloorHitHandler = exports.EmoteHandler = exports.ChatHandler = exports.AnchorHitHandler = exports.RequestEventWithPromiseStrategy = void 0;
+exports.ModerationHandler = exports.BuyItemHandler = exports.SetOutfitHandler = exports.GetInventoryHandler = exports.TipUserHandler = exports.BuyRoomBoostHandler = exports.BuyVoiceTimeHandler = exports.LeaveConversationHandler = exports.GetMessageHandler = exports.SendBulkMessageHandler = exports.SendMessageHandler = exports.GetConversationsHandler = exports.GetUserOutfitHandler = exports.RemoveSpeakerHandler = exports.InviteSpeakerHandler = exports.CheckVoiceChatHandler = exports.GetBackPackHandler = exports.MoveUserToRoomHandler = exports.ChangeRoomPrevilegeHandler = exports.GetRoomPrivilegeHandler = exports.ModerateRoomHandler = exports.ChannelHandler = exports.WalletHandler = exports.TeleportHandler = exports.RoomUsersHandler = exports.ReactionHandler = exports.FloorHitHandler = exports.EmoteHandler = exports.ChatHandler = exports.AnchorHitHandler = exports.RequestEventWithPromiseStrategy = void 0;
 const error_1 = require("../../utils/error");
 const utils_1 = require("../../utils/utils");
 const constant_1 = require("../../utils/constant");
@@ -61,9 +61,6 @@ exports.default = RequestEventStrategy;
  */
 class AnchorHitHandler {
     createPayload(data) {
-        if (!data) {
-            throw new Error("data cannot be empty");
-        }
         const payload = {
             _type: constant_1.eventRequest.AnchorHitRequest,
             anchor: { entity_id: data.entityId, anchor_ix: data.anchorIx },
@@ -76,7 +73,6 @@ exports.AnchorHitHandler = AnchorHitHandler;
 class ChatHandler {
     createPayload(data) {
         if (data.whisper) {
-            console.log(data);
             return {
                 _type: constant_1.eventRequest.ChatRequest,
                 message: data.message,
@@ -94,9 +90,6 @@ class ChatHandler {
 exports.ChatHandler = ChatHandler;
 class EmoteHandler {
     createPayload(data) {
-        if (!data) {
-            throw new Error("data cannot be empty");
-        }
         const payload = {
             _type: constant_1.eventRequest.EmoteRequest,
             emote_id: data.emoteId,
@@ -108,9 +101,6 @@ class EmoteHandler {
 exports.EmoteHandler = EmoteHandler;
 class FloorHitHandler {
     createPayload(data) {
-        if (!data) {
-            throw new Error("data cannot be empty");
-        }
         const payload = {
             _type: constant_1.eventRequest.FloorHitRequest,
             destination: { x: data.x, y: data.y, z: data.z, faing: data.facing },
@@ -122,9 +112,6 @@ class FloorHitHandler {
 exports.FloorHitHandler = FloorHitHandler;
 class ReactionHandler {
     createPayload(data) {
-        if (!data) {
-            throw new Error("data cannot be empty");
-        }
         const payload = {
             _type: constant_1.eventRequest.ReactionRequest,
             reaction: data.reaction,
@@ -136,9 +123,6 @@ class ReactionHandler {
 exports.ReactionHandler = ReactionHandler;
 class RoomUsersHandler {
     createPayload(data) {
-        if (!data) {
-            throw new Error("data cannot be empty");
-        }
         const payload = {
             _type: constant_1.eventRequest.GetRoomUsersRequest,
             rid: (0, utils_1.generateRid)()
@@ -149,9 +133,6 @@ class RoomUsersHandler {
 exports.RoomUsersHandler = RoomUsersHandler;
 class TeleportHandler {
     createPayload(data) {
-        if (!data) {
-            throw new Error("data cannot be empty");
-        }
         const payload = {
             _type: constant_1.eventRequest.TeleportRequest,
             user_id: data.userId,
@@ -163,9 +144,6 @@ class TeleportHandler {
 exports.TeleportHandler = TeleportHandler;
 class WalletHandler {
     createPayload(data) {
-        if (!data) {
-            throw new error_1.PayloadError("data cannot be empty");
-        }
         const payload = {
             _type: constant_1.eventRequest.GetWalletRequest,
             rid: (0, utils_1.generateRid)(),
@@ -176,9 +154,6 @@ class WalletHandler {
 exports.WalletHandler = WalletHandler;
 class ChannelHandler {
     createPayload(data) {
-        if (!data) {
-            throw new Error("data cannot be empty");
-        }
         const payload = {
             _type: constant_1.eventRequest.ChannelRequest,
             message: data.message,
@@ -192,9 +167,6 @@ class ChannelHandler {
 exports.ChannelHandler = ChannelHandler;
 class ModerateRoomHandler {
     createPayload(data) {
-        if (!data) {
-            throw new Error("data cannot be empty");
-        }
         const payload = {
             _type: constant_1.eventRequest.ModerateRoomRequest,
             user_id: data.userId,
@@ -208,13 +180,10 @@ class ModerateRoomHandler {
 exports.ModerateRoomHandler = ModerateRoomHandler;
 class GetRoomPrivilegeHandler {
     createPayload(data) {
-        if (!data) {
-            throw new Error("data cannot be empty");
-        }
         const payload = {
             _type: constant_1.eventRequest.GetRoomPrivilegeRequest,
             user_id: data.userId,
-            rid: null,
+            rid: (0, utils_1.generateRid)(),
         };
         return payload;
     }
@@ -222,9 +191,6 @@ class GetRoomPrivilegeHandler {
 exports.GetRoomPrivilegeHandler = GetRoomPrivilegeHandler;
 class ChangeRoomPrevilegeHandler {
     createPayload(data) {
-        if (!data) {
-            throw new Error("data cannot be empty");
-        }
         const payload = {
             _type: constant_1.eventRequest.ChangeRoomPrivilegeRequest,
             user_id: data.userId,
@@ -237,9 +203,6 @@ class ChangeRoomPrevilegeHandler {
 exports.ChangeRoomPrevilegeHandler = ChangeRoomPrevilegeHandler;
 class MoveUserToRoomHandler {
     createPayload(data) {
-        if (!data) {
-            throw new Error("data cannot be empty");
-        }
         const payload = {
             _type: constant_1.eventRequest.ChangeRoomPrivilegeRequest,
             user_id: data.userId,
@@ -252,9 +215,6 @@ class MoveUserToRoomHandler {
 exports.MoveUserToRoomHandler = MoveUserToRoomHandler;
 class GetBackPackHandler {
     createPayload(data) {
-        if (!data) {
-            throw new Error("data cannot be empty");
-        }
         const payload = {
             _type: constant_1.eventRequest.GetBackpackRequest,
             user_id: data.userId,
@@ -264,11 +224,8 @@ class GetBackPackHandler {
     }
 }
 exports.GetBackPackHandler = GetBackPackHandler;
-class CheckVoideChatHandler {
+class CheckVoiceChatHandler {
     createPayload(data) {
-        if (!data) {
-            throw new Error("data cannot be empty");
-        }
         const payload = {
             _type: constant_1.eventRequest.CheckVoiceChatRequest,
             rid: (0, utils_1.generateRid)(),
@@ -276,12 +233,9 @@ class CheckVoideChatHandler {
         return payload;
     }
 }
-exports.CheckVoideChatHandler = CheckVoideChatHandler;
+exports.CheckVoiceChatHandler = CheckVoiceChatHandler;
 class InviteSpeakerHandler {
     createPayload(data) {
-        if (!data) {
-            throw new Error("data cannot be empty");
-        }
         const payload = {
             _type: constant_1.eventRequest.InviteSpeakerRequest,
             rid: null,
@@ -292,9 +246,6 @@ class InviteSpeakerHandler {
 exports.InviteSpeakerHandler = InviteSpeakerHandler;
 class RemoveSpeakerHandler {
     createPayload(data) {
-        if (!data) {
-            throw new Error("data cannot be empty");
-        }
         const payload = {
             _type: constant_1.eventRequest.RemoveSpeakerRequest,
             user_id: data.userId,
@@ -306,9 +257,6 @@ class RemoveSpeakerHandler {
 exports.RemoveSpeakerHandler = RemoveSpeakerHandler;
 class GetUserOutfitHandler {
     createPayload(data) {
-        if (!data) {
-            throw new Error("data cannot be empty");
-        }
         const payload = {
             _type: constant_1.eventRequest.GetUserOutfitRequest,
             user_id: data.userId,
@@ -320,9 +268,6 @@ class GetUserOutfitHandler {
 exports.GetUserOutfitHandler = GetUserOutfitHandler;
 class GetConversationsHandler {
     createPayload(data) {
-        if (!data) {
-            throw new Error("data cannot be empty");
-        }
         const payload = {
             _type: constant_1.eventRequest.GetUserOutfitRequest,
             not_joined: data.notJoined,
@@ -335,9 +280,6 @@ class GetConversationsHandler {
 exports.GetConversationsHandler = GetConversationsHandler;
 class SendMessageHandler {
     createPayload(data) {
-        if (!data) {
-            throw new Error("data cannot be empty");
-        }
         const payload = {
             _type: constant_1.eventRequest.SendMessageRequest,
             conversation_id: data.conversationId,
@@ -353,9 +295,6 @@ class SendMessageHandler {
 exports.SendMessageHandler = SendMessageHandler;
 class SendBulkMessageHandler {
     createPayload(data) {
-        if (!data) {
-            throw new Error("data cannot be empty");
-        }
         const payload = {
             _type: constant_1.eventRequest.SendMessageRequest,
             user_ids: data.userIds,
@@ -371,9 +310,6 @@ class SendBulkMessageHandler {
 exports.SendBulkMessageHandler = SendBulkMessageHandler;
 class GetMessageHandler {
     createPayload(data) {
-        if (!data) {
-            throw new Error("data cannot be empty");
-        }
         const payload = {
             _type: constant_1.eventRequest.GetMessagesRequest,
             conversation_id: data.conversationId,
@@ -386,9 +322,6 @@ class GetMessageHandler {
 exports.GetMessageHandler = GetMessageHandler;
 class LeaveConversationHandler {
     createPayload(data) {
-        if (!data) {
-            throw new Error("data cannot be empty");
-        }
         const payload = {
             _type: constant_1.eventRequest.LeaveConversationRequest,
             conversation_id: data.conversationId,
@@ -400,9 +333,6 @@ class LeaveConversationHandler {
 exports.LeaveConversationHandler = LeaveConversationHandler;
 class BuyVoiceTimeHandler {
     createPayload(data) {
-        if (!data) {
-            throw new Error("data cannot be empty");
-        }
         const payload = {
             _type: constant_1.eventRequest.BuyVoiceTimeRequest,
             payment_method: data.paymentMethod,
@@ -414,9 +344,6 @@ class BuyVoiceTimeHandler {
 exports.BuyVoiceTimeHandler = BuyVoiceTimeHandler;
 class BuyRoomBoostHandler {
     createPayload(data) {
-        if (!data) {
-            throw new Error("data cannot be empty");
-        }
         const payload = {
             _type: constant_1.eventRequest.BuyRoomBoostRequest,
             payment_method: data.paymentMethod,
@@ -429,9 +356,6 @@ class BuyRoomBoostHandler {
 exports.BuyRoomBoostHandler = BuyRoomBoostHandler;
 class TipUserHandler {
     createPayload(data) {
-        if (!data) {
-            throw new Error("data cannot be empty");
-        }
         const payload = {
             _type: constant_1.eventRequest.TipUserRequest,
             user_id: data.userId,
@@ -444,9 +368,6 @@ class TipUserHandler {
 exports.TipUserHandler = TipUserHandler;
 class GetInventoryHandler {
     createPayload(data) {
-        if (!data) {
-            throw new Error("data cannot be empty");
-        }
         const payload = {
             _type: constant_1.eventRequest.GetInventoryRequest,
             rid: (0, utils_1.generateRid)(),
@@ -457,9 +378,6 @@ class GetInventoryHandler {
 exports.GetInventoryHandler = GetInventoryHandler;
 class SetOutfitHandler {
     createPayload(data) {
-        if (!data) {
-            throw new Error("data cannot be empty");
-        }
         const payload = {
             _type: constant_1.eventRequest.GetInventoryRequest,
             outfit: data.outfit,
@@ -471,9 +389,6 @@ class SetOutfitHandler {
 exports.SetOutfitHandler = SetOutfitHandler;
 class BuyItemHandler {
     createPayload(data) {
-        if (!data) {
-            throw new Error("data cannot be empty");
-        }
         const payload = {
             _type: constant_1.eventRequest.GetInventoryRequest,
             item_id: data.itemId,
@@ -483,3 +398,15 @@ class BuyItemHandler {
     }
 }
 exports.BuyItemHandler = BuyItemHandler;
+class ModerationHandler {
+    createPayload(data) {
+        return {
+            _type: constant_1.eventRequest.ModerateRoomRequest,
+            user_id: data.userId,
+            moderation_action: data.moderationAction,
+            action_length: data.actionLength,
+            rid: null,
+        };
+    }
+}
+exports.ModerationHandler = ModerationHandler;

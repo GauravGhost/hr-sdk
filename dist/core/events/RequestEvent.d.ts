@@ -61,7 +61,7 @@ export declare class MoveUserToRoomHandler implements RequestStrategy {
 export declare class GetBackPackHandler implements RequestStrategy {
     createPayload(data: GetBackpackPayload): object;
 }
-export declare class CheckVoideChatHandler implements RequestStrategy {
+export declare class CheckVoiceChatHandler implements RequestStrategy {
     createPayload(data: CheckVoiceChatPayload): object;
 }
 export declare class InviteSpeakerHandler implements RequestStrategy {
@@ -105,4 +105,7 @@ export declare class SetOutfitHandler implements RequestStrategy {
 }
 export declare class BuyItemHandler implements RequestStrategy {
     createPayload(data: BuyItemPayload): object;
+}
+export declare class ModerationHandler implements RequestStrategy {
+    createPayload(data: ModerateRoomPayload): object;
 }

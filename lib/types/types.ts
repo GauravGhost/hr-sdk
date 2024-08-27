@@ -54,7 +54,7 @@ export enum WalletType {
     roomVoiceTokens = "room_voice_tokens"
 }
 
-export enum PaymentResult  {
+export enum PaymentResult {
     success = "success",
     insufficientFunds = "insufficient_funds",
     onlyTokenBought = "only_token_bought",
@@ -64,6 +64,7 @@ export enum MessageType {
     text = "text",
     invite = "invite"
 }
+export type UserWithPosition = [User, Position | AnchorPosition];
 
 export interface Position {
     x: number,
@@ -80,15 +81,20 @@ export interface Item {
     activePalette: number | null
 }
 
-export interface CurrencyItem{
+export interface CurrencyItem {
     type: string;
     amount: number
 }
+
 
 export interface RoomPermission {
     moderator: boolean | null;
     designer: boolean | null;
 }
+export type RoomPermissionType = 
+  | { designer: boolean; moderator?: boolean }
+  | { designer?: boolean; moderator: boolean }
+  | { designer: boolean; moderator: boolean };
 
 export interface User {
     id: string;
@@ -186,9 +192,13 @@ export interface GetRoomPrivilegePayload {
     userId: string;
 }
 
+export interface GetRoomPrivilegeResponse {
+    content: RoomPermission
+}
+
 export interface ChangeRoomPrevilegePayload {
     userId: string;
-    permission: RoomPermission;
+    permission: RoomPermissionType;
 }
 
 export interface MoveUserToRoomPayload {
@@ -199,6 +209,10 @@ export interface MoveUserToRoomPayload {
 // async backpack
 export interface GetBackpackPayload {
     userId: string;
+}
+
+export interface GetBackpackResponse {
+    backpack: { [key: string]: number };
 }
 
 export interface ChangeBackpackPayload {

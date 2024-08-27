@@ -1,4 +1,5 @@
-import { AnchorPosition, BuyItemPayload, Conversation, CurrencyItem, Item, Message, Position, RoomPermission, SetOutfitPayload, TipUserPayload, User, WhisperPayload } from "../types/types";
+import { AnchorHitPayload, BuyItemPayload, ChangeRoomPrevilegePayload, Conversation, CurrencyItem, EmotePayload, FloorHitPayload, GetRoomPrivilegePayload, Item, Message, ModerateRoomPayload, ModerationAction, Position, RoomPermission, RoomPermissionType, SetOutfitPayload, TeleportPayload, TipUserPayload, User, Wallet, WhisperPayload } from "../types/types";
+import { PayloadError } from "./error";
 
 type ValidationSchema<T> = {
     [K in keyof T]: 'required' | 'optional';
@@ -35,6 +36,12 @@ export function validateEnum(value: any, enumType: any): string | null {
     return null;
 }
 
+export const validateAndThrow = (validationResult: string | null) => {
+    if (validationResult) {
+        throw new PayloadError(validationResult);
+    }
+};
+
 /**
  * =================== Schema Definition =================
  */
@@ -53,16 +60,17 @@ export const positionSchema: ValidationSchema<Position> = {
     facing: option.required,
 };
 
-export const anchorPositionSchema: ValidationSchema<AnchorPosition> = {
-    entityId: option.required,
-    anchor_id: option.required,
-};
-
 
 export const currencyItemSchema: ValidationSchema<CurrencyItem> = {
     type: option.required,
     amount: option.required,
 };
+
+
+export const roomPermissionSchema: ValidationSchema<RoomPermissionType> = {
+    designer: option.optional,
+    moderator: option.optional,
+}
 
 export const conversationSchema: ValidationSchema<Conversation> = {
     id: option.required,
@@ -77,16 +85,10 @@ export const conversationSchema: ValidationSchema<Conversation> = {
 export const messageSchema: ValidationSchema<Message> = {
     messageId: option.required,
     conversationId: option.required,
-    createdAt: option.optional, 
+    createdAt: option.optional,
     content: option.required,
     senderId: option.required,
     category: option.required,
-};
-
-
-export const roomPermissionSchema: ValidationSchema<RoomPermission> = {
-    moderator: option.optional,
-    designer: option.optional,
 };
 
 export const userSchema: ValidationSchema<User> = {
@@ -111,4 +113,41 @@ export const setOutfitSchema: ValidationSchema<SetOutfitPayload> = {
 export const whisperSchema: ValidationSchema<WhisperPayload> = {
     message: option.required,
     whisperTargetId: option.required,
+}
+
+export const emoteSchema: ValidationSchema<EmotePayload> = {
+    emoteId: option.required,
+    targetUserId: option.required
+}
+
+export const anchorSchema: ValidationSchema<AnchorHitPayload> = {
+    entityId: option.required,
+    anchorIx: option.optional
+}
+
+export const floorHitSchema: ValidationSchema<FloorHitPayload> = {
+    facing: option.optional,
+    x: option.required,
+    y: option.required,
+    z: option.required,
+}
+
+export const teleportSchema: ValidationSchema<TeleportPayload> = {
+    userId: option.required,
+    destination: option.required
+}
+
+export const moderationSchema: ValidationSchema<ModerateRoomPayload> = {
+    userId: option.required,
+    moderationAction: option.required,
+    actionLength: option.optional
+}
+
+export const getRoomPrivilegeSchema: ValidationSchema<GetRoomPrivilegePayload> = {
+    userId: option.required
+}
+
+export const changeRoomPrivilegesSchema: ValidationSchema<ChangeRoomPrevilegePayload> = {
+    userId: option.required,
+    permission: option.required
 }

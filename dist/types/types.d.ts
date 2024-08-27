@@ -55,6 +55,7 @@ export declare enum MessageType {
     text = "text",
     invite = "invite"
 }
+export type UserWithPosition = [User, Position | AnchorPosition];
 export interface Position {
     x: number;
     y: number;
@@ -150,6 +151,9 @@ export interface ModerateRoomPayload {
 }
 export interface GetRoomPrivilegePayload {
     userId: string;
+}
+export interface GetRoomPrivilegeResponse {
+    content: RoomPermission;
 }
 export interface ChangeRoomPrevilegePayload {
     userId: string;
