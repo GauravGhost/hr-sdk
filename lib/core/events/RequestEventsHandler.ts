@@ -1,111 +1,139 @@
-import { AnchorHitPayload, EmotePayload, FloorHitPayload, ReactionPayload, TeleportPayload, Wallet, WhisperPayload } from "../../types/types";
-import { RequestError } from "../../utils/error";
+import { AnchorHitPayload, EmotePayload, FloorHitPayload, GoldBars, ReactionPayload, TeleportPayload, TipUserPayload, Wallet, WalletType, WhisperPayload } from "../../types/types";
+import { PayloadError, RequestError, ResponseError } from "../../utils/error";
+import { catchFn } from "../../utils/utils";
+import { tipUserSchema, validate, validateEnum, whisperSchema } from "../../utils/validation";
 import { Highrise } from "../highrise";
-import RequestEventStrategy, { AnchorHitHandler, ChatHandler, EmoteHandler, FloorHitHandler, ReactionHandler, RequestEventWithPromiseStrategy, RoomUsersHandler, TeleportHandler, WalletHandler } from "./RequestEvent";
+import RequestEventStrategy, { AnchorHitHandler, ChatHandler, EmoteHandler, FloorHitHandler, ReactionHandler, RequestEventWithPromiseStrategy, RoomUsersHandler, TeleportHandler, TipUserHandler, WalletHandler } from "./RequestEvent";
 
 
 
 class RequestEvent {
     constructor(private hr: Highrise) {
     }
-    message(message: string) {
+    message = catchFn((message: string) => {
+        if(!message){
+            throw new PayloadError("Invalid message payload");
+        }
         const chatStrategy = new ChatHandler();
         const handler = new RequestEventStrategy(this.hr, chatStrategy);
         handler.execute({ message: message });
-    }
+    })
 
-    whisper(data: WhisperPayload) {
+    whisper = catchFn((data: WhisperPayload) => {
+        const payloadError = validate(data, whisperSchema);
+        if(payloadError) {
+            throw new PayloadError(payloadError);
+        }
         const chatStrategy = new ChatHandler();
         const handler = new RequestEventStrategy(this.hr, chatStrategy);
-        handler.execute({...data, whisper: true});
-    }
+        handler.execute({ ...data, whisper: true });
+    })
 
-    emote(data: EmotePayload) {
+    emote = catchFn((data: EmotePayload) => {
         const emoteStrategy = new EmoteHandler();
         const handler = new RequestEventStrategy(this.hr, emoteStrategy);
         handler.execute(data);
-    }
+    })
 
-    sit({entityId, anchorIx = 0}: AnchorHitPayload) {
+    sit = catchFn(({ entityId, anchorIx = 0 }: AnchorHitPayload) => {
         const anchorHitStrategy = new AnchorHitHandler();
         const handler = new RequestEventStrategy(this.hr, anchorHitStrategy);
-        handler.execute({entityId, anchorIx})
-    }
+        handler.execute({ entityId, anchorIx })
+    })
 
-    async wallet(): Promise<Array<Wallet>> {
+    wallet = catchFn(async (): Promise<Array<Wallet>> => {
         const walletStrategy = new WalletHandler();
         const handler = new RequestEventWithPromiseStrategy(this.hr, walletStrategy);
         const response = await handler.execute({});
         return response.content;
-    }
+    })
 
-    async gold() {
+    gold = catchFn(async (): Promise<Wallet> => {
         const wallet = await this.wallet();
-        return wallet.find((token) => token.type === "gold");
-    }
+        const gold = wallet.find((token) => token.type === WalletType.gold);
+        if (!gold) {
+            throw new ResponseError("Wallet not found");
+        }
+        return gold;
+    })
 
-    async boostToken() {
+    boostToken = catchFn(async (): Promise<Wallet> => {
         const wallet = await this.wallet();
-        return wallet.find((token) => token.type === "room_boost_tokens");
-    }
+        const boostToken = wallet.find((token) => token.type === WalletType.roomBoostTokens);
+        if (!boostToken) {
+            throw new ResponseError("Boost token not found");
+        }
+        return boostToken;
+    })
 
-    async voiceToken() {
+    voiceToken = catchFn(async (): Promise<Wallet> => {
         const wallet = await this.wallet();
-        return wallet.find((token) => token.type === "room_voice_tokens");
-    }
+        const voiceToken = wallet.find((token) => token.type === WalletType.roomVoiceTokens);
+        if(!voiceToken) {
+            throw new ResponseError(`Voice token not found`);
+        }
+        return voiceToken;  
+    })
+
     // x: number, y: number, z: number, facing: Facing = Facing.FrontLeft
-    async walk(data: FloorHitPayload) {
+    walk = catchFn(async (data: FloorHitPayload) => {
         const floorHitStrategy = new FloorHitHandler();
         const handler = new RequestEventStrategy(this.hr, floorHitStrategy);
         handler.execute(data);
-    }
+    })
 
-    async teleport(data: TeleportPayload) {
+    teleport = catchFn((data: TeleportPayload) => {
         const teleportStrategy = new TeleportHandler();
         const handler = new RequestEventStrategy(this.hr, teleportStrategy);
         handler.execute(data);
-    }
+    })
 
-    async reaction(data: ReactionPayload){
+    reaction = catchFn((data: ReactionPayload) => {
         const reactionStrategy = new ReactionHandler();
         const handler = new RequestEventStrategy(this.hr, reactionStrategy);
         handler.execute(data);
-    }
-    
-    async getRooomUsers(): Promise<any> {
+    })
+
+    getRooomUsers = catchFn(async (): Promise<any> => {
         const userStrategy = new RoomUsersHandler();
         const handler = new RequestEventWithPromiseStrategy(this.hr, userStrategy);
         const response = await handler.execute({});
         return response.content;
-    }
+    })
 
-    async getRoomUserByUsername(username: string) {
-        try {
-            const users = await this.getRooomUsers();
-            const user = users.find((userData: any) => userData[0].username === username);
-            if (user) {
-                return user;
-            } else {
-                throw new RequestError(`User with username "${username}" not found`);
-            }
-        } catch (error) {
-            throw error;
+    getRoomUserByUsername = catchFn(async (username: string) => {
+        const users = await this.getRooomUsers();
+        const user = users.find((userData: any) => userData[0].username === username);
+        if (user) {
+            return user;
+        } else {
+            throw new RequestError(`User with username "${username}" not found`);
         }
-    }
+    })
 
-    async getRoomUserByUserId(userId: string) {
-        try {
-            const users = await this.getRooomUsers();
-            const user = users.find((userData: any) => userData[0].id === userId);
-            if (user) {
-                return user;
-            } else {
-                throw new RequestError(`User with userId "${userId}" not found`);
-            }
-        } catch (error) {
-            throw error;
+    getRoomUserByUserId = catchFn(async (userId: string) => {
+        const users = await this.getRooomUsers();
+        const user = users.find((userData: any) => userData[0].id === userId);
+        if (user) {
+            return user;
+        } else {
+            throw new RequestError(`User with userId "${userId}" not found`);
         }
-    }
 
+    })
+
+    tipUser = catchFn((data: TipUserPayload) => {
+        const error = validate(data, tipUserSchema);
+        if (error) {
+            throw new PayloadError(error);
+        }
+        const enumError = validateEnum(data.goldBar, GoldBars);
+        if (enumError) {
+            throw new PayloadError(enumError)
+        }
+        const tipUserStrategy = new TipUserHandler();
+        const handler = new RequestEventStrategy(this.hr, tipUserStrategy);
+        handler.execute(data);
+    })
 }
 export default RequestEvent;

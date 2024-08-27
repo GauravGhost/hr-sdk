@@ -1,3 +1,12 @@
+export declare enum EmitEvent {
+    Ready = "Ready",
+    PlayerJoin = "PlayerJoin",
+    PlayerLeft = "PlayerLeft",
+    Chat = "Chat",
+    PlayerMovement = "PlayerMovement",
+    PlayerSit = "PlayerSit",
+    Error = "Error"
+}
 export declare enum Reaction {
     clap = "clap",
     heart = "heart",
@@ -17,6 +26,34 @@ export declare enum ModerationAction {
     unban = "unban",
     mute = "mute",
     unmute = "unmute"
+}
+export declare enum PaymentMethod {
+    bot_wallet_only = "bot_wallet_only"
+}
+export declare enum GoldBars {
+    goldBar1 = "gold_bar_1",
+    goldBar5 = "gold_bar_5",
+    goldBar10 = "gold_bar_10",
+    goldBar50 = "gold_bar_50",
+    goldBar100 = "gold_bar_100",
+    goldBar500 = "gold_bar_500",
+    goldBar1k = "gold_bar_1k",
+    goldBar5000 = "gold_bar_5000",
+    goldBar10k = "gold_bar_10k"
+}
+export declare enum WalletType {
+    gold = "gold",
+    roomBoostTokens = "room_boost_tokens",
+    roomVoiceTokens = "room_voice_tokens"
+}
+export declare enum PaymentResult {
+    success = "success",
+    insufficientFunds = "insufficient_funds",
+    onlyTokenBought = "only_token_bought"
+}
+export declare enum MessageType {
+    text = "text",
+    invite = "invite"
 }
 export interface Position {
     x: number;
@@ -43,6 +80,27 @@ export interface User {
     id: string;
     username: string;
 }
+export interface Conversation {
+    id: string;
+    didJoin: boolean;
+    unreadCount: number;
+    muted: boolean;
+    memberIds: string[];
+    name: string;
+    ownerId: string;
+}
+export interface Message {
+    messageId: string;
+    conversationId: string;
+    createdAt: string | null;
+    content: string;
+    senderId: string;
+    category: MessageType;
+}
+export interface RoomInfo {
+    roomName: string;
+    ownerId: string;
+}
 export interface AnchorPosition {
     entityId: string;
     anchor_id: number;
@@ -52,7 +110,7 @@ export interface EmotePayload {
     targetUserId?: string;
 }
 export interface Wallet {
-    type: string;
+    type: WalletType;
     amount: number;
 }
 export interface RoomUser {
@@ -83,9 +141,9 @@ export interface ReactionPayload {
 export interface ChannelPayload {
     message: string;
     tags: Set<string>;
-    only_to: Set<string>;
+    onlyTo: Set<string>;
 }
-export interface ModeraterateRoomPayload {
+export interface ModerateRoomPayload {
     userId: string;
     moderationAction: ModerationAction;
     actionLength: number;
@@ -101,24 +159,107 @@ export interface MoveUserToRoomPayload {
     userId: string;
     roomId: string;
 }
-export interface RoomInfoPayload {
-    ownerId: string;
-    roomName: string;
-}
-export interface GetBackpackRequest {
+export interface GetBackpackPayload {
     userId: string;
 }
-export interface ChangeBackpackRequest {
+export interface ChangeBackpackPayload {
     userId: string;
     changes: Array<string>;
+}
+export interface CheckVoiceChatPayload {
+}
+export interface CheckVoiceChatResponse {
+    secondsLeft: number;
+    autoSpeakers: string[];
+}
+export interface InviteSpeakerPayload {
+    userId: string;
+}
+export interface RemoveSpeakerPayload {
+    userId: string;
+}
+export interface GetUserOutfitPayload {
+    userId: string;
+}
+export interface GetUserOutfitResponse {
+    outfit: Array<Item>;
+}
+export interface GetConversationsPayload {
+    notJoined: boolean;
+    lastId: string;
+}
+export interface GetConversationsResponse {
+    conversations: Array<Conversation>;
+    notJoined: number;
+}
+export interface SendMessagePayload {
+    conversationId: string;
+    content: string;
+    type: MessageType;
+    roomId: string | null;
+    worldId: string | null;
+}
+export interface SendBulkMessagePayload {
+    userIds: Array<string>;
+    content: string;
+    type: MessageType;
+    roomId: string | null;
+    worldId: string | null;
+}
+export interface GetMessagePayload {
+    conversationId: string;
+    lastMessageId: string | null;
+}
+export interface GetMessageResponse {
+    messages: Message;
+}
+export interface LeaveConversationPayload {
+    conversationId: string;
+}
+export interface BuyVoiceTimePayload {
+    paymentMethod: PaymentMethod;
+}
+export interface BuyVoiceTimeResponse {
+    result: PaymentResult;
+}
+export interface BuyRoomBoostPayload {
+    paymentMethod: PaymentMethod;
+    amount: number;
+}
+export interface BuyRoomBoostResponse {
+    result: PaymentResult;
+}
+export interface TipUserPayload {
+    userId: string;
+    goldBar: GoldBars;
+}
+export interface TipUserResponse {
+    result: PaymentResult;
+}
+export interface GetInventoryPayload {
+}
+export interface GetInventoryResponse {
+    items: Array<Item>;
+}
+export interface SetOutfitPayload {
+    outfit: Array<Item>;
+}
+export interface BuyItemPayload {
+    itemId: string;
+}
+export interface BuyItemResponse {
+    result: PaymentResult;
 }
 export interface RateLimit {
     client: Array<number>;
     socials: Array<number>;
 }
+/**
+ * ================== Events ==================
+ */
 export interface SessionMetadataEvent {
     userId: string;
-    roomInfo: RoomInfoPayload;
+    roomInfo: RoomInfo;
     connectionId: string;
     rateLimits: RateLimit;
     sdkVersion: string;
@@ -158,4 +299,15 @@ export interface TipReactionEvent {
 export interface UserMovedEvent {
     user: User;
     position: Position | AnchorPosition;
+}
+export interface MessageEvent {
+    userId: string;
+    conversationId: string;
+    isNewConversation: boolean;
+}
+export interface RoomModeratedEvent {
+    moderatorId: string;
+    targetUserId: string;
+    moderationType: ModerationAction;
+    duration: number | null;
 }

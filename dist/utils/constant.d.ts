@@ -74,30 +74,8 @@ export declare const eventResponse: {
     UserMovedEvent: string;
     VoiceEvent: string;
 };
-export declare const emitEvent: {
-    Ready: string;
-    PlayerJoin: string;
-    PlayerLeft: string;
-    Chat: string;
-    PlayerMovement: string;
-    PlayerSit: string;
-    Error: string;
-};
 export declare const cacheKeys: {
     ownerId: string;
     roomName: string;
     botUserId: string;
-};
-export declare const playerFace: {
-    BackLeft: string;
-    BackRight: string;
-    FrontLeft: string;
-    FrontRight: string;
-};
-export declare const reactions: {
-    clap: string;
-    heart: string;
-    thumbs: string;
-    wave: string;
-    wink: string;
 };

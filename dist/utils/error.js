@@ -55,7 +55,7 @@ class ResponseError extends BaseError {
 exports.ResponseError = ResponseError;
 class PayloadError extends BaseError {
     constructor(message) {
-        super('PayloadError', message);
+        super('ValidationError', message);
     }
 }
 exports.PayloadError = PayloadError;

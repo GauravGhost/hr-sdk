@@ -31,11 +31,11 @@ class Highrise extends stream_1.EventEmitter {
     }
     connect(token, roomId, cb) {
         if ((!token || token === "") && (!this.token || this.token === "")) {
-            this.emit(constant_1.emitEvent.Error, new error_1.HighriseError("[Aborted] Please supply a bot token in your configuration file."));
+            this.emit(constant_1.eventResponse.Error, new error_1.HighriseError("[Aborted] Please supply a bot token in your configuration file."));
             return;
         }
         if ((!roomId || roomId === "") && (!this.roomId || this.roomId === "")) {
-            this.emit(constant_1.emitEvent.Error, new error_1.HighriseError("[Aborted] Please supply a room ID in your configuration file."));
+            this.emit(constant_1.eventResponse.Error, new error_1.HighriseError("[Aborted] Please supply a room ID in your configuration file."));
             return;
         }
         this.token = token || this.token;
