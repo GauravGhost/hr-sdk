@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.generateRid = generateRid;
+exports.removeCustomKeys = removeCustomKeys;
 exports.convertKeysToCamelCase = convertKeysToCamelCase;
 exports.catchFn = catchFn;
 function generateRid() {
@@ -9,6 +10,17 @@ function generateRid() {
 }
 function toCamelCase(str) {
     return str.replace(/([-_][a-z])/g, (group) => group.toUpperCase().replace('-', '').replace('_', ''));
+}
+/**
+ *
+ * @param {object} data - Data which contains the key which will be removed
+ * @param {Array<string>} keys - List of key which needs to be removed, It is optional.
+ * @returns
+ */
+function removeCustomKeys(data, keys = []) {
+    const keysToRemove = new Set([...keys, 'rid', '_type']);
+    keysToRemove.forEach(key => delete data[key]);
+    return data;
 }
 function convertKeysToCamelCase(obj) {
     if (Array.isArray(obj)) {

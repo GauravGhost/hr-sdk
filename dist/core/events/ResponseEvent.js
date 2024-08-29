@@ -48,6 +48,7 @@ class SessionMetadataHandler {
         this.cache = cache_1.default;
     }
     handle(data) {
+        data = (0, utils_1.removeCustomKeys)(data);
         data = (0, utils_1.convertKeysToCamelCase)(data);
         this.emitter.emit(types_1.EmitEvent.Ready, data);
         // Save Important detail to the local cache.
@@ -62,6 +63,7 @@ class AnchorHitResponseHandler {
         this.emitter = emitter;
     }
     handle(data) {
+        data = (0, utils_1.removeCustomKeys)(data);
         data = (0, utils_1.convertKeysToCamelCase)(data);
         this.emitter.emit(types_1.EmitEvent.PlayerSit, data);
     }
@@ -72,6 +74,7 @@ class ChatEventHandler {
         this.emitter = emitter;
     }
     handle(data) {
+        data = (0, utils_1.removeCustomKeys)(data);
         data = (0, utils_1.convertKeysToCamelCase)(data);
         this.emitter.emit(types_1.EmitEvent.Chat, data);
     }
@@ -82,8 +85,9 @@ class PlayerJoinHandler {
         this.emitter = emitter;
     }
     handle(data) {
+        data = (0, utils_1.removeCustomKeys)(data);
         data = (0, utils_1.convertKeysToCamelCase)(data);
-        this.emitter.emit(types_1.EmitEvent.PlayerJoin, data.user);
+        this.emitter.emit(types_1.EmitEvent.PlayerJoin, data);
     }
 }
 exports.PlayerJoinHandler = PlayerJoinHandler;
@@ -92,8 +96,9 @@ class PlayerLeftHandler {
         this.emitter = emitter;
     }
     handle(data) {
+        data = (0, utils_1.removeCustomKeys)(data);
         data = (0, utils_1.convertKeysToCamelCase)(data);
-        this.emitter.emit(types_1.EmitEvent.PlayerLeft, { user: data.user });
+        this.emitter.emit(types_1.EmitEvent.PlayerLeft, data);
     }
 }
 exports.PlayerLeftHandler = PlayerLeftHandler;
@@ -102,6 +107,7 @@ class PlayerMovementHandler {
         this.emitter = emitter;
     }
     handle(data) {
+        data = (0, utils_1.removeCustomKeys)(data);
         data = (0, utils_1.convertKeysToCamelCase)(data);
         this.emitter.emit(types_1.EmitEvent.PlayerMovement, { user: data.user, position: data.position });
     }

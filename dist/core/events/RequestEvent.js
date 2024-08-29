@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ModerationHandler = exports.BuyItemHandler = exports.SetOutfitHandler = exports.GetInventoryHandler = exports.TipUserHandler = exports.BuyRoomBoostHandler = exports.BuyVoiceTimeHandler = exports.LeaveConversationHandler = exports.GetMessageHandler = exports.SendBulkMessageHandler = exports.SendMessageHandler = exports.GetConversationsHandler = exports.GetUserOutfitHandler = exports.RemoveSpeakerHandler = exports.InviteSpeakerHandler = exports.CheckVoiceChatHandler = exports.GetBackPackHandler = exports.MoveUserToRoomHandler = exports.ChangeRoomPrevilegeHandler = exports.GetRoomPrivilegeHandler = exports.ModerateRoomHandler = exports.ChannelHandler = exports.WalletHandler = exports.TeleportHandler = exports.RoomUsersHandler = exports.ReactionHandler = exports.FloorHitHandler = exports.EmoteHandler = exports.ChatHandler = exports.AnchorHitHandler = exports.RequestEventWithPromiseStrategy = void 0;
+exports.ModerationHandler = exports.BuyItemHandler = exports.SetOutfitHandler = exports.GetInventoryHandler = exports.TipUserHandler = exports.BuyRoomBoostHandler = exports.BuyVoiceTimeHandler = exports.LeaveConversationHandler = exports.GetMessageHandler = exports.SendBulkMessageHandler = exports.SendMessageHandler = exports.GetConversationsHandler = exports.GetUserOutfitHandler = exports.RemoveSpeakerHandler = exports.InviteSpeakerHandler = exports.CheckVoiceChatHandler = exports.GetBackpackHandler = exports.MoveUserToRoomHandler = exports.ChangeRoomPrevilegeHandler = exports.GetRoomPrivilegeHandler = exports.ModerateRoomHandler = exports.ChannelHandler = exports.WalletHandler = exports.TeleportHandler = exports.RoomUsersHandler = exports.ReactionHandler = exports.FloorHitHandler = exports.EmoteHandler = exports.ChatHandler = exports.AnchorHitHandler = exports.RequestEventWithPromiseStrategy = void 0;
 const error_1 = require("../../utils/error");
 const utils_1 = require("../../utils/utils");
 const constant_1 = require("../../utils/constant");
@@ -25,7 +25,7 @@ class RequestEventWithPromiseStrategy {
         this.strategy = strategy;
     }
     async execute(incomingPayload) {
-        if (this.hr && this.hr.ws && this.hr.ws.readyState === this.hr.ws.OPEN) {
+        if (this.hr.ws && this.hr.ws.readyState === this.hr.ws.OPEN) {
             return new Promise((resolve, reject) => {
                 const payload = this.strategy.createPayload(incomingPayload);
                 const messageHandler = (event) => {
@@ -158,7 +158,7 @@ class ChannelHandler {
             _type: constant_1.eventRequest.ChannelRequest,
             message: data.message,
             tags: data.tags,
-            only_to: data.tags,
+            only_to: data.onlyTo,
             rid: null,
         };
         return payload;
@@ -204,7 +204,7 @@ exports.ChangeRoomPrevilegeHandler = ChangeRoomPrevilegeHandler;
 class MoveUserToRoomHandler {
     createPayload(data) {
         const payload = {
-            _type: constant_1.eventRequest.ChangeRoomPrivilegeRequest,
+            _type: constant_1.eventRequest.MoveUserToRoomRequest,
             user_id: data.userId,
             room_id: data.roomId,
             rid: null,
@@ -213,17 +213,17 @@ class MoveUserToRoomHandler {
     }
 }
 exports.MoveUserToRoomHandler = MoveUserToRoomHandler;
-class GetBackPackHandler {
+class GetBackpackHandler {
     createPayload(data) {
         const payload = {
             _type: constant_1.eventRequest.GetBackpackRequest,
             user_id: data.userId,
-            rid: null,
+            rid: (0, utils_1.generateRid)(),
         };
         return payload;
     }
 }
-exports.GetBackPackHandler = GetBackPackHandler;
+exports.GetBackpackHandler = GetBackpackHandler;
 class CheckVoiceChatHandler {
     createPayload(data) {
         const payload = {
@@ -238,6 +238,7 @@ class InviteSpeakerHandler {
     createPayload(data) {
         const payload = {
             _type: constant_1.eventRequest.InviteSpeakerRequest,
+            user_id: data.userId,
             rid: null,
         };
         return payload;
@@ -269,7 +270,7 @@ exports.GetUserOutfitHandler = GetUserOutfitHandler;
 class GetConversationsHandler {
     createPayload(data) {
         const payload = {
-            _type: constant_1.eventRequest.GetUserOutfitRequest,
+            _type: constant_1.eventRequest.GetConversationsRequest,
             not_joined: data.notJoined,
             last_id: data.lastId,
             rid: (0, utils_1.generateRid)(),
@@ -280,6 +281,9 @@ class GetConversationsHandler {
 exports.GetConversationsHandler = GetConversationsHandler;
 class SendMessageHandler {
     createPayload(data) {
+        if (data.roomId && data.worldId) {
+            throw new error_1.PayloadError("One of [roomId, worldId] is required!");
+        }
         const payload = {
             _type: constant_1.eventRequest.SendMessageRequest,
             conversation_id: data.conversationId,
@@ -295,6 +299,9 @@ class SendMessageHandler {
 exports.SendMessageHandler = SendMessageHandler;
 class SendBulkMessageHandler {
     createPayload(data) {
+        if (data.roomId && data.worldId) {
+            throw new error_1.PayloadError("One of [roomId, worldId] is required!");
+        }
         const payload = {
             _type: constant_1.eventRequest.SendMessageRequest,
             user_ids: data.userIds,
@@ -344,6 +351,7 @@ class BuyVoiceTimeHandler {
 exports.BuyVoiceTimeHandler = BuyVoiceTimeHandler;
 class BuyRoomBoostHandler {
     createPayload(data) {
+        data.amount = data.amount ? data.amount : 1;
         const payload = {
             _type: constant_1.eventRequest.BuyRoomBoostRequest,
             payment_method: data.paymentMethod,
@@ -379,7 +387,7 @@ exports.GetInventoryHandler = GetInventoryHandler;
 class SetOutfitHandler {
     createPayload(data) {
         const payload = {
-            _type: constant_1.eventRequest.GetInventoryRequest,
+            _type: constant_1.eventRequest.SetOutfitRequest,
             outfit: data.outfit,
             rid: null,
         };
@@ -390,7 +398,7 @@ exports.SetOutfitHandler = SetOutfitHandler;
 class BuyItemHandler {
     createPayload(data) {
         const payload = {
-            _type: constant_1.eventRequest.GetInventoryRequest,
+            _type: constant_1.eventRequest.BuyItemRequest,
             item_id: data.itemId,
             rid: (0, utils_1.generateRid)(),
         };

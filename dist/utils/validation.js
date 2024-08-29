@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getRoomPrivilegeSchema = exports.moderationSchema = exports.teleportSchema = exports.floorHitSchema = exports.anchorSchema = exports.emoteSchema = exports.whisperSchema = exports.setOutfitSchema = exports.buyItemSchema = exports.tipUserSchema = exports.userSchema = exports.roomPermissionSchema = exports.messageSchema = exports.conversationSchema = exports.currencyItemSchema = exports.positionSchema = exports.itemSchema = exports.validateAndThrow = void 0;
+exports.channelSchema = exports.buyRoomBoostSchema = exports.buyVoiceTimeSchema = exports.leaveConverationSchema = exports.getMessageSchema = exports.sendBulkMessageSchema = exports.sendMessageSchema = exports.getConversationSchema = exports.getOutfitSchema = exports.removeSpeakerSchema = exports.inviteSpeakerSchema = exports.moveUserToRoomSchema = exports.changeRoomPrivilegesSchema = exports.getRoomPrivilegeSchema = exports.moderationSchema = exports.teleportSchema = exports.floorHitSchema = exports.anchorSchema = exports.emoteSchema = exports.whisperSchema = exports.setOutfitSchema = exports.buyItemSchema = exports.tipUserSchema = exports.userSchema = exports.messageSchema = exports.conversationSchema = exports.roomPermissionSchema = exports.currencyItemSchema = exports.positionSchema = exports.itemSchema = exports.validateAndThrow = void 0;
 exports.validate = validate;
 exports.validateEnum = validateEnum;
 const error_1 = require("./error");
@@ -58,6 +58,10 @@ exports.currencyItemSchema = {
     type: option.required,
     amount: option.required,
 };
+exports.roomPermissionSchema = {
+    designer: option.optional,
+    moderator: option.optional,
+};
 exports.conversationSchema = {
     id: option.required,
     didJoin: option.required,
@@ -74,10 +78,6 @@ exports.messageSchema = {
     content: option.required,
     senderId: option.required,
     category: option.required,
-};
-exports.roomPermissionSchema = {
-    moderator: option.optional,
-    designer: option.optional,
 };
 exports.userSchema = {
     id: option.required,
@@ -122,4 +122,58 @@ exports.moderationSchema = {
 };
 exports.getRoomPrivilegeSchema = {
     userId: option.required
+};
+exports.changeRoomPrivilegesSchema = {
+    userId: option.required,
+    permission: option.required
+};
+exports.moveUserToRoomSchema = {
+    roomId: option.required,
+    userId: option.required
+};
+exports.inviteSpeakerSchema = {
+    userId: option.required
+};
+exports.removeSpeakerSchema = {
+    userId: option.required
+};
+exports.getOutfitSchema = {
+    userId: option.required
+};
+exports.getConversationSchema = {
+    lastId: option.optional,
+    notJoined: option.optional
+};
+exports.sendMessageSchema = {
+    content: option.required,
+    conversationId: option.required,
+    roomId: option.optional,
+    type: option.required,
+    worldId: option.optional
+};
+exports.sendBulkMessageSchema = {
+    content: option.required,
+    userIds: option.required,
+    roomId: option.optional,
+    type: option.required,
+    worldId: option.optional
+};
+exports.getMessageSchema = {
+    conversationId: option.required,
+    lastMessageId: option.optional
+};
+exports.leaveConverationSchema = {
+    conversationId: option.required,
+};
+exports.buyVoiceTimeSchema = {
+    paymentMethod: option.required
+};
+exports.buyRoomBoostSchema = {
+    amount: option.optional,
+    paymentMethod: option.required
+};
+exports.channelSchema = {
+    message: option.required,
+    onlyTo: option.optional,
+    tags: option.required
 };

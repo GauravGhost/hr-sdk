@@ -10,14 +10,14 @@ import RequestEvent from "./events/RequestEventsHandler";
 export class Highrise extends EventEmitter {
   public ws: WebSocket | null;
   private keepaliveInterval: NodeJS.Timeout | null;
-  public requestEvent: RequestEvent
+  public action: RequestEvent
   private responseEventFactory: ResponseEventFactory
   constructor(private token: string, private roomId: string, public options?: any) {
     super();
     this.ws = null;
     this.options = {};
     this.keepaliveInterval = null;
-    this.requestEvent = new RequestEvent(this)
+    this.action = new RequestEvent(this)
     this.responseEventFactory = new ResponseEventFactory(this);
   }
 

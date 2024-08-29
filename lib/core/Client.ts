@@ -3,7 +3,7 @@ import { Highrise } from "./highrise";
 
 class HR {
     private highrise: Highrise
-    public requestEvent: RequestEvent
+    public action: RequestEvent
     public on: (...args: any[]) => void;
     public connect: (token: string, roomId: string, cb: () => void) => void;
 
@@ -11,7 +11,7 @@ class HR {
         this.highrise = new Highrise(token, roomId, options);
         this.connect = this.highrise.connect.bind(this.highrise);
         this.on = this.highrise.on.bind(this.highrise);
-        this.requestEvent = this.highrise.requestEvent;
+        this.action = this.highrise.action;
     }
 }
 

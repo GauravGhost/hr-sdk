@@ -77,6 +77,16 @@ export interface RoomPermission {
     moderator: boolean | null;
     designer: boolean | null;
 }
+export type RoomPermissionType = {
+    designer: boolean;
+    moderator?: boolean;
+} | {
+    designer?: boolean;
+    moderator: boolean;
+} | {
+    designer: boolean;
+    moderator: boolean;
+};
 export interface User {
     id: string;
     username: string;
@@ -157,7 +167,7 @@ export interface GetRoomPrivilegeResponse {
 }
 export interface ChangeRoomPrevilegePayload {
     userId: string;
-    permission: RoomPermission;
+    permission: RoomPermissionType;
 }
 export interface MoveUserToRoomPayload {
     userId: string;
@@ -165,6 +175,11 @@ export interface MoveUserToRoomPayload {
 }
 export interface GetBackpackPayload {
     userId: string;
+}
+export interface GetBackpackResponse {
+    backpack: {
+        [key: string]: number;
+    };
 }
 export interface ChangeBackpackPayload {
     userId: string;
@@ -188,6 +203,11 @@ export interface GetUserOutfitPayload {
 export interface GetUserOutfitResponse {
     outfit: Array<Item>;
 }
+export interface GetUserOutfitResponse {
+    outfit: Array<Item>;
+}
+export interface SetUserOutfitPayload {
+}
 export interface GetConversationsPayload {
     notJoined: boolean;
     lastId: string;
@@ -196,19 +216,17 @@ export interface GetConversationsResponse {
     conversations: Array<Conversation>;
     notJoined: number;
 }
-export interface SendMessagePayload {
-    conversationId: string;
+interface MessagePayload {
     content: string;
     type: MessageType;
     roomId: string | null;
     worldId: string | null;
 }
-export interface SendBulkMessagePayload {
+export interface SendMessagePayload extends MessagePayload {
+    conversationId: string;
+}
+export interface SendBulkMessagePayload extends MessagePayload {
     userIds: Array<string>;
-    content: string;
-    type: MessageType;
-    roomId: string | null;
-    worldId: string | null;
 }
 export interface GetMessagePayload {
     conversationId: string;
@@ -315,3 +333,4 @@ export interface RoomModeratedEvent {
     moderationType: ModerationAction;
     duration: number | null;
 }
+export {};

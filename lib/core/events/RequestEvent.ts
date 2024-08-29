@@ -20,7 +20,6 @@ import {
     InviteSpeakerPayload,
     LeaveConversationPayload,
     ModerateRoomPayload,
-    ModerationAction,
     MoveUserToRoomPayload,
     ReactionPayload,
     RemoveSpeakerPayload,
@@ -52,7 +51,7 @@ export class RequestEventWithPromiseStrategy {
     constructor(private hr: Highrise, private strategy: RequestStrategy) { }
 
     async execute(incomingPayload: any): Promise<any> {
-        if (this.hr && this.hr.ws && this.hr.ws.readyState === this.hr.ws.OPEN) {
+        if (this.hr.ws && this.hr.ws.readyState === this.hr.ws.OPEN) {
             return new Promise((resolve, reject) => {
                 const payload: any = this.strategy.createPayload(incomingPayload)
 
@@ -60,24 +59,24 @@ export class RequestEventWithPromiseStrategy {
                     const messageObject = JSON.parse(event.data);
 
                     if (messageObject.rid === payload.rid) {
-                        this.hr!.ws!.removeEventListener('message', messageHandler);
+                        this.hr.ws!.removeEventListener('message', messageHandler);
                         resolve(messageObject);
                     }
                 };
 
-                this.hr!.ws!.addEventListener('message', messageHandler);
+                this.hr.ws!.addEventListener('message', messageHandler);
 
-                this.hr!.ws!.send(JSON.stringify(payload), (error) => {
+                this.hr.ws!.send(JSON.stringify(payload), (error) => {
                     if (error) {
                         reject(error);
                     }
                 });
 
-                this.hr!.ws!.onerror = (error: any) => {
+                this.hr.ws!.onerror = (error: any) => {
                     reject(new WebSocketError("WebSocket encountered an error."));
                 };
 
-                this.hr!.ws!.onclose = () => {
+                this.hr.ws!.onclose = () => {
                     reject(new WebSocketError("WebSocket connection closed."));
                 };
             });
@@ -192,7 +191,7 @@ export class ChannelHandler implements RequestStrategy {
             _type: eventRequest.ChannelRequest,
             message: data.message,
             tags: data.tags,
-            only_to: data.tags,
+            only_to: data.onlyTo,
             rid: null,
         }
         return payload;
@@ -238,7 +237,7 @@ export class ChangeRoomPrevilegeHandler implements RequestStrategy {
 export class MoveUserToRoomHandler implements RequestStrategy {
     createPayload(data: MoveUserToRoomPayload): object {
         const payload = {
-            _type: eventRequest.ChangeRoomPrivilegeRequest,
+            _type: eventRequest.MoveUserToRoomRequest,
             user_id: data.userId,
             room_id: data.roomId,
             rid: null,
@@ -247,12 +246,12 @@ export class MoveUserToRoomHandler implements RequestStrategy {
     }
 }
 
-export class GetBackPackHandler implements RequestStrategy {
+export class GetBackpackHandler implements RequestStrategy {
     createPayload(data: GetBackpackPayload): object {
         const payload = {
             _type: eventRequest.GetBackpackRequest,
             user_id: data.userId,
-            rid: null,
+            rid: generateRid(),
         }
         return payload;
     }
@@ -272,6 +271,7 @@ export class InviteSpeakerHandler implements RequestStrategy {
     createPayload(data: InviteSpeakerPayload): object {
         const payload = {
             _type: eventRequest.InviteSpeakerRequest,
+            user_id: data.userId,
             rid: null,
         }
         return payload;
@@ -303,7 +303,7 @@ export class GetUserOutfitHandler implements RequestStrategy {
 export class GetConversationsHandler implements RequestStrategy {
     createPayload(data: GetConversationsPayload): object {
         const payload = {
-            _type: eventRequest.GetUserOutfitRequest,
+            _type: eventRequest.GetConversationsRequest,
             not_joined: data.notJoined,
             last_id: data.lastId,
             rid: generateRid(),
@@ -314,6 +314,9 @@ export class GetConversationsHandler implements RequestStrategy {
 
 export class SendMessageHandler implements RequestStrategy {
     createPayload(data: SendMessagePayload): object {
+        if (data.roomId && data.worldId) {
+            throw new PayloadError("One of [roomId, worldId] is required!")
+        }
         const payload = {
             _type: eventRequest.SendMessageRequest,
             conversation_id: data.conversationId,
@@ -329,6 +332,9 @@ export class SendMessageHandler implements RequestStrategy {
 
 export class SendBulkMessageHandler implements RequestStrategy {
     createPayload(data: SendBulkMessagePayload): object {
+        if (data.roomId && data.worldId) {
+            throw new PayloadError("One of [roomId, worldId] is required!")
+        }
         const payload = {
             _type: eventRequest.SendMessageRequest,
             user_ids: data.userIds,
@@ -378,6 +384,7 @@ export class BuyVoiceTimeHandler implements RequestStrategy {
 
 export class BuyRoomBoostHandler implements RequestStrategy {
     createPayload(data: BuyRoomBoostPayload): object {
+        data.amount = data.amount ? data.amount : 1;
         const payload = {
             _type: eventRequest.BuyRoomBoostRequest,
             payment_method: data.paymentMethod,
@@ -413,7 +420,7 @@ export class GetInventoryHandler implements RequestStrategy {
 export class SetOutfitHandler implements RequestStrategy {
     createPayload(data: SetOutfitPayload): object {
         const payload = {
-            _type: eventRequest.GetInventoryRequest,
+            _type: eventRequest.SetOutfitRequest,
             outfit: data.outfit,
             rid: null,
         }
@@ -424,7 +431,7 @@ export class SetOutfitHandler implements RequestStrategy {
 export class BuyItemHandler implements RequestStrategy {
     createPayload(data: BuyItemPayload): object {
         const payload = {
-            _type: eventRequest.GetInventoryRequest,
+            _type: eventRequest.BuyItemRequest,
             item_id: data.itemId,
             rid: generateRid(),
         }

@@ -8,7 +8,6 @@ export enum EmitEvent {
     Error = "Error"
 }
 
-
 export enum Reaction {
     clap = "clap",
     heart = "heart",
@@ -243,8 +242,14 @@ export interface GetUserOutfitPayload {
 }
 
 export interface GetUserOutfitResponse {
+    outfit: Array<Item>
+}
+
+export interface GetUserOutfitResponse {
     outfit: Array<Item>;
 }
+
+export interface SetUserOutfitPayload{}
 
 export interface GetConversationsPayload {
     notJoined: boolean;
@@ -256,21 +261,19 @@ export interface GetConversationsResponse {
     notJoined: number;
 }
 
-
-export interface SendMessagePayload {
-    conversationId: string;
+interface MessagePayload {
     content: string;
     type: MessageType
     roomId: string | null;
     worldId: string | null;
 }
 
-export interface SendBulkMessagePayload {
+export interface SendMessagePayload extends MessagePayload {
+    conversationId: string;
+}
+
+export interface SendBulkMessagePayload extends MessagePayload {
     userIds: Array<string>;
-    content: string;
-    type: MessageType;
-    roomId: string | null;
-    worldId: string | null;
 }
 
 export interface GetMessagePayload {
@@ -285,7 +288,6 @@ export interface GetMessageResponse {
 export interface LeaveConversationPayload {
     conversationId: string;
 }
-
 
 export interface BuyVoiceTimePayload {
     paymentMethod: PaymentMethod

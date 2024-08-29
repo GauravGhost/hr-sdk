@@ -2,7 +2,7 @@ import { EventEmitter } from "stream";
 import { cacheKeys, eventResponse } from "../../utils/constant";
 import { AnchorHitPayload, ChatEvent, EmitEvent, PlayerJoinedEvent, PlayerLeftEvent, SessionMetadataEvent, UserMovedEvent } from "../../types/types";
 import hrCache, { HRCache } from "../../utils/cache";
-import { convertKeysToCamelCase } from "../../utils/utils";
+import { convertKeysToCamelCase, removeCustomKeys } from "../../utils/utils";
 
 
 export interface IMessageHandler {
@@ -58,6 +58,7 @@ export class SessionMetadataHandler implements IMessageHandler {
     }
 
     handle(data: SessionMetadataEvent): void {
+        data = removeCustomKeys(data);
         data = convertKeysToCamelCase(data);
         this.emitter.emit(EmitEvent.Ready, data);
 
@@ -75,6 +76,7 @@ export class AnchorHitResponseHandler implements IMessageHandler {
     }
 
     handle(data: AnchorHitPayload): void {
+        data = removeCustomKeys(data);
         data = convertKeysToCamelCase(data);
         this.emitter.emit(EmitEvent.PlayerSit, data);
     }
@@ -87,6 +89,7 @@ export class ChatEventHandler implements IMessageHandler {
     }
 
     handle(data: ChatEvent): void {
+        data = removeCustomKeys(data);
         data = convertKeysToCamelCase(data);
         this.emitter.emit(EmitEvent.Chat, data);
     }
@@ -99,8 +102,9 @@ export class PlayerJoinHandler implements IMessageHandler {
     }
 
     handle(data: PlayerJoinedEvent): void {
+        data = removeCustomKeys(data);
         data = convertKeysToCamelCase(data);
-        this.emitter.emit(EmitEvent.PlayerJoin, data.user);
+        this.emitter.emit(EmitEvent.PlayerJoin, data);
     }
 }
 
@@ -111,8 +115,9 @@ export class PlayerLeftHandler implements IMessageHandler {
     }
 
     handle(data: PlayerLeftEvent): void {
+        data = removeCustomKeys(data);
         data = convertKeysToCamelCase(data);
-        this.emitter.emit(EmitEvent.PlayerLeft, {user: data.user});
+        this.emitter.emit(EmitEvent.PlayerLeft, data);
     }
 }
 
@@ -123,6 +128,7 @@ export class PlayerMovementHandler implements IMessageHandler {
     }
 
     handle(data: UserMovedEvent): void {
+        data = removeCustomKeys(data);
         data = convertKeysToCamelCase(data);
         this.emitter.emit(EmitEvent.PlayerMovement, {user: data.user, position: data.position});
     }

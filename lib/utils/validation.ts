@@ -1,4 +1,5 @@
-import { AnchorHitPayload, BuyItemPayload, ChangeRoomPrevilegePayload, Conversation, CurrencyItem, EmotePayload, FloorHitPayload, GetRoomPrivilegePayload, Item, Message, ModerateRoomPayload, ModerationAction, Position, RoomPermission, RoomPermissionType, SetOutfitPayload, TeleportPayload, TipUserPayload, User, Wallet, WhisperPayload } from "../types/types";
+import { SendBulkMessageHandler } from "../core/events/RequestEvent";
+import { AnchorHitPayload, BuyItemPayload, BuyRoomBoostPayload, BuyVoiceTimePayload, ChangeRoomPrevilegePayload, ChannelPayload, Conversation, CurrencyItem, EmotePayload, FloorHitPayload, GetConversationsPayload, GetMessagePayload, GetRoomPrivilegePayload, GetUserOutfitPayload, InviteSpeakerPayload, Item, LeaveConversationPayload, Message, ModerateRoomPayload, ModerationAction, MoveUserToRoomPayload, Position, RemoveSpeakerPayload, RoomPermission, RoomPermissionType, SendBulkMessagePayload, SendMessagePayload, SetOutfitPayload, TeleportPayload, TipUserPayload, User, Wallet, WhisperPayload } from "../types/types";
 import { PayloadError } from "./error";
 
 type ValidationSchema<T> = {
@@ -150,4 +151,66 @@ export const getRoomPrivilegeSchema: ValidationSchema<GetRoomPrivilegePayload> =
 export const changeRoomPrivilegesSchema: ValidationSchema<ChangeRoomPrevilegePayload> = {
     userId: option.required,
     permission: option.required
+}
+
+export const moveUserToRoomSchema: ValidationSchema<MoveUserToRoomPayload> = {
+    roomId: option.required,
+    userId: option.required
+}
+
+export const inviteSpeakerSchema: ValidationSchema<InviteSpeakerPayload> = {
+    userId: option.required
+}
+
+export const removeSpeakerSchema: ValidationSchema<RemoveSpeakerPayload> = {
+    userId: option.required
+}
+
+export const getOutfitSchema: ValidationSchema<GetUserOutfitPayload> = {
+    userId: option.required
+}
+
+export const getConversationSchema: ValidationSchema<GetConversationsPayload> = {
+    lastId: option.optional,
+    notJoined: option.optional
+}
+
+export const sendMessageSchema: ValidationSchema<SendMessagePayload> = {
+    content: option.required,
+    conversationId: option.required,
+    roomId: option.optional,
+    type: option.required,
+    worldId: option.optional
+}
+
+export const sendBulkMessageSchema: ValidationSchema<SendBulkMessagePayload> = {
+    content: option.required,
+    userIds: option.required,
+    roomId: option.optional,
+    type: option.required,
+    worldId: option.optional
+}
+
+export const getMessageSchema: ValidationSchema<GetMessagePayload> = {
+    conversationId: option.required,
+    lastMessageId: option.optional
+}
+
+export const leaveConverationSchema: ValidationSchema<LeaveConversationPayload> = {
+    conversationId: option.required,
+}
+
+export const buyVoiceTimeSchema: ValidationSchema<BuyVoiceTimePayload> = {
+    paymentMethod: option.required
+}
+
+export const buyRoomBoostSchema: ValidationSchema<BuyRoomBoostPayload> = {
+    amount: option.optional,
+    paymentMethod: option.required
+}
+
+export const channelSchema: ValidationSchema<ChannelPayload> = {
+    message: option.required,
+    onlyTo: option.optional,
+    tags: option.required
 }
