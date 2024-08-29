@@ -6,7 +6,7 @@ class HR {
         this.highrise = new highrise_1.Highrise(token, roomId, options);
         this.connect = this.highrise.connect.bind(this.highrise);
         this.on = this.highrise.on.bind(this.highrise);
-        this.requestEvent = this.highrise.requestEvent;
+        this.action = this.highrise.action;
     }
 }
 exports.default = HR;

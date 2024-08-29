@@ -26,7 +26,7 @@ class Highrise extends stream_1.EventEmitter {
         this.ws = null;
         this.options = {};
         this.keepaliveInterval = null;
-        this.requestEvent = new RequestEventsHandler_1.default(this);
+        this.action = new RequestEventsHandler_1.default(this);
         this.responseEventFactory = new ResponseEvent_1.ResponseEventFactory(this);
     }
     connect(token, roomId, cb) {

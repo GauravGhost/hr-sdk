@@ -8,7 +8,7 @@ export declare class Highrise extends EventEmitter {
     options?: any;
     ws: WebSocket | null;
     private keepaliveInterval;
-    requestEvent: RequestEvent;
+    action: RequestEvent;
     private responseEventFactory;
     constructor(token: string, roomId: string, options?: any);
     connect(token: string, roomId: string, cb: () => void): void;
