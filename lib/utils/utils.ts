@@ -52,3 +52,4 @@ export function catchFn<T>(fn: SyncFunction<T> | AsyncFunction<T>): (...args: an
     }
   };
 }
+

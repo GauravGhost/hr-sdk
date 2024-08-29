@@ -417,3 +417,4 @@ export interface RoomModeratedEvent {
     duration: number | null;
 }
 
+export type WalkFunction = (data: FloorHitPayload) => void;

@@ -1,10 +1,10 @@
 {
   "name": "hr-sdk",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "A JavaScript library for Highrise bot.",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
-  "types": "dist/esm/index.d.ts",
+  "types": "dist/types/index.d.ts",
   "files": [
     "dist",
     "LICENCE",
@@ -39,6 +39,7 @@
   "dependencies": {
     "axios": "^1.7.4",
     "chalk": "^5.3.0",
+    "hr-sdk": "file:",
     "ws": "^8.18.0"
   }
 }

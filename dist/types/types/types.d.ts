@@ -333,4 +333,5 @@ export interface RoomModeratedEvent {
     moderationType: ModerationAction;
     duration: number | null;
 }
+export type WalkFunction = (data: FloorHitPayload) => void;
 export {};
