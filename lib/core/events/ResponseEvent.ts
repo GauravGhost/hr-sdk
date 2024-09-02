@@ -1,6 +1,6 @@
 import { EventEmitter } from "stream";
 import { cacheKeys, eventResponse } from "../../utils/constant";
-import { AnchorHitPayload, ChatEvent, EmitEvent, PlayerJoinedEvent, PlayerLeftEvent, SessionMetadataEvent, UserMovedEvent } from "../../types/types";
+import { AnchorHitPayload, ChatEvent, EmitEvent, PlayerJoinedEvent, PlayerLeftEvent, SessionMetadataEvent, PlayerMovedEvent, RoomModeratedEvent, MessageEvent, TipReactionEvent, ChannelEvent, ReactionEvent } from "../../types/types";
 import hrCache, { HRCache } from "../../utils/cache";
 import { convertKeysToCamelCase, removeCustomKeys } from "../../utils/utils";
 
@@ -21,9 +21,13 @@ export class ResponseEventFactory {
             [eventResponse.UserLeftEvent]: new PlayerLeftHandler(emitter),
             [eventResponse.UserMovedEvent]: new PlayerMovementHandler(emitter),
             [eventResponse.AnchorHitResponse]: new AnchorHitResponseHandler(emitter),
-        };
+            [eventResponse.ModerateRoomResponse]: new RoomModeraterHander(emitter),
+            [eventResponse.TipReactionEvent]: new TipReactionHandler(emitter),
+            [eventResponse.ChannelEvent]: new ChannelHandler(emitter),
+            [eventResponse.MessageEvent]: new MessageHandler(emitter),
+            [eventResponse.ReactionEvent]: new ReactionHandler(emitter),
+        } as { [key: string]: IMessageHandler };
     }
-
     getHandler(type: string): IMessageHandler | null {
         return this.handlers[type] || null;
     }
@@ -127,9 +131,74 @@ export class PlayerMovementHandler implements IMessageHandler {
         this.emitter = emitter;
     }
 
-    handle(data: UserMovedEvent): void {
+    handle(data: PlayerMovedEvent): void {
         data = removeCustomKeys(data);
         data = convertKeysToCamelCase(data);
-        this.emitter.emit(EmitEvent.PlayerMovement, {user: data.user, position: data.position});
+        this.emitter.emit(EmitEvent.PlayerMovement, data);
+    }
+}
+
+export class RoomModeraterHander {
+    private emitter: EventEmitter;
+    constructor(emitter: EventEmitter) {
+        this.emitter = emitter;
+    }
+
+    handle(data: RoomModeratedEvent): void {
+        data = removeCustomKeys(data);
+        data = convertKeysToCamelCase(data);
+        this.emitter.emit(EmitEvent.Moderate, data);
+    }
+}
+
+export class MessageHandler {
+    private emitter: EventEmitter;
+    constructor(emitter: EventEmitter) {
+        this.emitter = emitter;
+    }
+
+    handle(data: MessageEvent): void {
+        data = removeCustomKeys(data);
+        data = convertKeysToCamelCase(data);
+        this.emitter.emit(EmitEvent.Message, data);
+    }
+}
+
+export class TipReactionHandler {
+    private emitter: EventEmitter;
+    constructor(emitter: EventEmitter) {
+        this.emitter = emitter;
+    }
+
+    handler(data: TipReactionEvent) {
+        data = removeCustomKeys(data);
+        data = convertKeysToCamelCase(data);
+        this.emitter.emit(EmitEvent.Tip, data);
+    }
+}
+
+export class ChannelHandler {
+    private emitter: EventEmitter;
+    constructor(emitter: EventEmitter) {
+        this.emitter = emitter;
+    }
+
+    handler(data: ChannelEvent) {
+        data = removeCustomKeys(data);
+        data = convertKeysToCamelCase(data);
+        this.emitter.emit(EmitEvent.Channel, data);
+    }
+}
+
+export class ReactionHandler {
+    private emitter: EventEmitter;
+    constructor(emitter: EventEmitter) {
+        this.emitter = emitter;
+    }
+
+    handler(data: ReactionEvent) {
+        data = removeCustomKeys(data);
+        data = convertKeysToCamelCase(data);
+        this.emitter.emit(EmitEvent.Reaction, data);
     }
 }

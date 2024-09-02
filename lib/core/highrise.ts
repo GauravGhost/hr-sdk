@@ -12,7 +12,7 @@ export class Highrise extends EventEmitter {
   private keepaliveInterval: NodeJS.Timeout | null;
   public action: RequestEvent
   private responseEventFactory: ResponseEventFactory
-  constructor(private token: string, private roomId: string, public options?: any) {
+  constructor(private token?: string, private roomId?: string, public options?: any) {
     super();
     this.ws = null;
     this.options = {};
@@ -23,7 +23,7 @@ export class Highrise extends EventEmitter {
 
 
 
-  connect(token: string, roomId: string, cb: () => void) {
+  connect(token: string, roomId: string, cb?: () => void) {
     if ((!token || token === "") && (!this.token || this.token === "")) {
       this.emit(eventResponse.Error, new HighriseError("[Aborted] Please supply a bot token in your configuration file."));
       return;
@@ -43,7 +43,7 @@ export class Highrise extends EventEmitter {
         'api-token': this.token,
       },
     });
-    this.addEventListeners(cb);
+    cb ? this.addEventListeners(cb) : this.addEventListeners();
   }
 
   #sendKeepalive() {
@@ -52,10 +52,10 @@ export class Highrise extends EventEmitter {
     }
   }
 
-  addEventListeners(cb: () => void) {
+  addEventListeners(cb?: () => void) {
     if (!this.ws) return;
     this.ws.addEventListener('open', () => {
-      if(typeof cb == 'function') cb();
+      if (typeof cb == 'function') cb();
       this.#sendKeepalive();
 
       if (this.keepaliveInterval) {

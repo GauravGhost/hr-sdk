@@ -5,7 +5,12 @@ export enum EmitEvent {
     Chat = 'Chat',
     PlayerMovement = "PlayerMovement",
     PlayerSit = "PlayerSit",
-    Error = "Error"
+    Error = "Error",
+    Moderate = "Moderate",
+    Message = "Message",
+    Tip = "Tip",
+    Channel = "Channel",
+    Reaction = "Reaction"
 }
 
 export enum Reaction {
@@ -389,7 +394,7 @@ export interface TipReactionEvent {
     item: Item | CurrencyItem
 }
 
-export interface UserMovedEvent {
+export interface PlayerMovedEvent {
     user: User,
     position: Position | AnchorPosition
 }
@@ -416,5 +421,3 @@ export interface RoomModeratedEvent {
     moderationType: ModerationAction;
     duration: number | null;
 }
-
-export type WalkFunction = (data: FloorHitPayload) => void;

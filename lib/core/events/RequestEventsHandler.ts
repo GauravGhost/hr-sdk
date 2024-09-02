@@ -10,7 +10,7 @@ import RequestEventStrategy, { AnchorHitHandler, BuyItemHandler, BuyRoomBoostHan
 class RequestEvent {
     constructor(private hr: Highrise) {
     }
-    message(message: string): void {
+    broadcastMessage(message: string): void {
         try {
             if (!message) {
                 throw new PayloadError("Invalid message payload");
@@ -364,7 +364,7 @@ class RequestEvent {
         }
     };
 
-    sendMessage(data: SendMessagePayload): void {
+    sendMessageToUser(data: SendMessagePayload): void {
         try {
             validateAndThrow(validate(data, sendMessageSchema));
             validateAndThrow(validateEnum(data.type, MessageType));
@@ -378,7 +378,7 @@ class RequestEvent {
         }
     };
 
-    sendBulkMessage = ((data: SendBulkMessagePayload): void => {
+    sendBulkMessageToUser = ((data: SendBulkMessagePayload): void => {
         try {
             validateAndThrow(validate(data, sendBulkMessageSchema));
             validateAndThrow(validateEnum(data.type, MessageType));
