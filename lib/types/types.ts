@@ -74,7 +74,7 @@ export interface Position {
     x: number,
     y: number,
     z: number,
-    facing: number
+    facing: string
 }
 
 export interface Item {
