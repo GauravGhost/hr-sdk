@@ -192,7 +192,7 @@ export interface ChannelPayload {
 export interface ModerateRoomPayload {
     userId: string;
     moderationAction: ModerationAction;
-    actionLength: number;
+    actionLength?: number;
 }
 
 // async

@@ -19,15 +19,15 @@ npm install hr-sdk
 Here's a basic example of how to use the Highrise SDK:
 
 ```javascript
-import { HR, event } from 'hr-sdk';
+import { HR, Event } from 'hr-sdk';
 
 const bot = new HR();
 
-bot.on(event.Ready, (data) => {
+bot.on(Event.Ready, (data) => {
     console.log("bot is connected to the server", data)
 })
 
-bot.on(event.Chat, ({user, message, whisper}) => {
+bot.on(Event.Chat, ({user, message, whisper}) => {
    console.log('Received chat create event: @' + user.username + ": " + message);
 });
 
