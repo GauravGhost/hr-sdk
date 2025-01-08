@@ -170,7 +170,7 @@ export class TipReactionHandler {
         this.emitter = emitter;
     }
 
-    handler(data: TipReactionEvent) {
+    handle(data: TipReactionEvent) {
         data = removeCustomKeys(data);
         data = convertKeysToCamelCase(data);
         this.emitter.emit(EmitEvent.Tip, data);
@@ -183,7 +183,7 @@ export class ChannelHandler {
         this.emitter = emitter;
     }
 
-    handler(data: ChannelEvent) {
+    handle(data: ChannelEvent) {
         data = removeCustomKeys(data);
         data = convertKeysToCamelCase(data);
         this.emitter.emit(EmitEvent.Channel, data);
@@ -196,7 +196,7 @@ export class ReactionHandler {
         this.emitter = emitter;
     }
 
-    handler(data: ReactionEvent) {
+    handle(data: ReactionEvent) {
         data = removeCustomKeys(data);
         data = convertKeysToCamelCase(data);
         this.emitter.emit(EmitEvent.Reaction, data);
