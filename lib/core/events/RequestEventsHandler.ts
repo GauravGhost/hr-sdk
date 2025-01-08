@@ -1,4 +1,5 @@
-import { AnchorHitPayload, ChangeRoomPrevilegePayload, EmotePayload, Facing, FloorHitPayload, GetBackpackResponse, GetRoomPrivilegePayload, GetRoomPrivilegeResponse, GoldBars, ModerateRoomPayload, ModerationAction, ReactionPayload, TeleportPayload, TipUserPayload, UserWithPosition, MoveUserToRoomPayload, Wallet, WalletType, WhisperPayload, InviteSpeakerPayload, RemoveSpeakerPayload, GetUserOutfitPayload, GetUserOutfitResponse, GetConversationsPayload, GetConversationsResponse, SendMessagePayload, MessageType, SendBulkMessagePayload, GetMessagePayload, GetMessageResponse, Message, LeaveConversationPayload, Item, RoomPermission, BuyVoiceTimePayload, PaymentMethod, BuyVoiceTimeResponse, PaymentResult, BuyRoomBoostPayload, BuyRoomBoostResponse, BuyItemPayload, BuyItemResponse, ChannelPayload, SetOutfitPayload, GetInventoryPayload, GetInventoryResponse} from "../../types/types";
+import { AnchorHitPayload, ChangeRoomPrevilegePayload, EmotePayload, Facing, FloorHitPayload, GetBackpackResponse, GetRoomPrivilegePayload, GetRoomPrivilegeResponse, GoldBars, ModerateRoomPayload, ModerationAction, ReactionPayload, TeleportPayload, TipUserPayload, UserWithPosition, MoveUserToRoomPayload, Wallet, WalletType, WhisperPayload, InviteSpeakerPayload, RemoveSpeakerPayload, GetUserOutfitPayload, GetUserOutfitResponse, GetConversationsPayload, GetConversationsResponse, SendMessagePayload, MessageType, SendBulkMessagePayload, GetMessagePayload, GetMessageResponse, Message, LeaveConversationPayload, Item, RoomPermission, BuyVoiceTimePayload, PaymentMethod, BuyVoiceTimeResponse, PaymentResult, BuyRoomBoostPayload, BuyRoomBoostResponse, BuyItemPayload, BuyItemResponse, ChannelPayload, SetOutfitPayload, GetInventoryPayload, GetInventoryResponse } from "../../types/types";
+import hrCache from "../../utils/cache";
 import { PayloadError, RequestError, ResponseError } from "../../utils/error";
 import { catchFn, removeCustomKeys } from "../../utils/utils";
 import { anchorSchema, buyItemSchema, buyRoomBoostSchema, buyVoiceTimeSchema, changeRoomPrivilegesSchema, channelSchema, emoteSchema, floorHitSchema, getConversationSchema, getMessageSchema, getOutfitSchema, getRoomPrivilegeSchema, inviteSpeakerSchema, leaveConverationSchema, moderationSchema, moveUserToRoomSchema, positionSchema, removeSpeakerSchema, roomPermissionSchema, sendBulkMessageSchema, sendMessageSchema, setOutfitSchema, teleportSchema, tipUserSchema, userSchema, validate, validateAndThrow, validateEnum, whisperSchema } from "../../utils/validation";
@@ -168,8 +169,9 @@ class RequestEvent {
             const userStrategy = new RoomUsersHandler();
             const handler = new RequestEventWithPromiseStrategy(this.hr, userStrategy);
             const response = await handler.execute({});
-            return response.content;
-
+            const users: Array<UserWithPosition> = response.content;
+            const modifiedUsers = users.filter(user => user[0].id !== hrCache.get('botUserId'));
+            return modifiedUsers;
         } catch (error) {
             throw error;
         }
