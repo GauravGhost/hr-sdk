@@ -77,9 +77,7 @@ export class Highrise extends EventEmitter {
     }
     const handler = this.responseEventFactory.getHandler(data._type);
     if (handler) {
-      handler.handle(data);
-    } else {
-      console.log("No handler for event type: ", data._type);
+      handler?.handle(data);
     }
   }
 
