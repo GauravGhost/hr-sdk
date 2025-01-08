@@ -1,3 +1,7 @@
+export type Options = {
+    maxRetries?: number;
+    retryDelay?: number;
+}
 export enum EmitEvent {
     Ready = 'Ready',
     PlayerJoin = 'PlayerJoin',
@@ -95,10 +99,10 @@ export interface RoomPermission {
     moderator: boolean | null;
     designer: boolean | null;
 }
-export type RoomPermissionType = 
-  | { designer: boolean; moderator?: boolean }
-  | { designer?: boolean; moderator: boolean }
-  | { designer: boolean; moderator: boolean };
+export type RoomPermissionType =
+    | { designer: boolean; moderator?: boolean }
+    | { designer?: boolean; moderator: boolean }
+    | { designer: boolean; moderator: boolean };
 
 export interface User {
     id: string;
@@ -254,7 +258,7 @@ export interface GetUserOutfitResponse {
     outfit: Array<Item>;
 }
 
-export interface SetUserOutfitPayload{}
+export interface SetUserOutfitPayload { }
 
 export interface GetConversationsPayload {
     notJoined: boolean;
