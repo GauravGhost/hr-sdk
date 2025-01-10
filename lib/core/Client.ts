@@ -2,8 +2,8 @@ import RequestEvent from "./events/RequestEventsHandler";
 import { Highrise } from "./highrise";
 
 class HR {
-    private highrise: Highrise
-    public action: RequestEvent
+    private readonly highrise: Highrise;
+    public action: RequestEvent;
     public on: (...args: any[]) => void;
     public connect: (token: string, roomId: string, cb: () => void) => void;
 
@@ -13,7 +13,14 @@ class HR {
         this.on = this.highrise.on.bind(this.highrise);
         this.action = this.highrise.action;
     }
-}
 
+    public changeRoom(token: string, newRoomId: string): Promise<void> {
+        return this.highrise.changeRoom(token, newRoomId);
+    }
+
+    public close(): Promise<void> {
+        return this.highrise.close();
+    }
+}
 
 export default HR;

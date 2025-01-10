@@ -17,8 +17,9 @@ export class Highrise extends EventEmitter {
   private readonly maxRetries: number;
   private readonly retryDelay: number;
   public action: RequestEvent
+  private isChangingRoom: boolean = false;
   private readonly responseEventFactory: ResponseEventFactory
-  
+
   constructor(private token?: string, private roomId?: string, public options?: Options) {
     super();
     this.ws = null;
@@ -54,6 +55,18 @@ export class Highrise extends EventEmitter {
         'api-token': this.token,
       },
     });
+
+    this.once(eventResponse.Error, (error: any) => {
+      if (error.message.includes('Multilogin')) {
+        console.log('Multilogin detected, handling reconnection...');
+        this.cleanupConnection().then(() => {
+          setTimeout(() => {
+            this.connect(token, roomId, cb);
+          }, 2000);
+        });
+      }
+    });
+
     cb ? this.addEventListeners(cb) : this.addEventListeners();
   }
 
@@ -117,20 +130,88 @@ export class Highrise extends EventEmitter {
     }, delay);
   }
 
-  close() {
-    if (this.keepaliveInterval) {
-      clearInterval(this.keepaliveInterval);
-      this.keepaliveInterval = null;
-    }
-    if (this.reconnectTimeout) {
-      clearTimeout(this.reconnectTimeout);
-      this.reconnectTimeout = null;
-    }
+  async changeRoom(token: string, newRoomId: string): Promise<void> {
+    try {
+      if (this.isChangingRoom) {
+        throw new Error('Room change already in progress');
+      }
 
-    if (this.ws) {
-      this.ws.close();
-      this.ws = null;
+      this.isChangingRoom = true;
+      const oldRoomId = this.roomId;
+
+      // Clean up existing connection
+      await this.cleanupConnection();
+
+      // Wait before establishing new connection
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      // Connect to new room
+      return new Promise((resolve, reject) => {
+        try {
+          this.connect(token, newRoomId, () => {
+            this.emit('roomChanged', { oldRoomId, newRoomId });
+            resolve();
+          });
+
+          // Handle connection errors
+          const errorHandler = (error: Error) => {
+            this.emit('error', error);
+            reject(error);
+          };
+
+          this.once(eventResponse.Error, errorHandler);
+
+          // Remove error handler after successful connection
+          this.once('ready', () => {
+            this.removeListener(eventResponse.Error, errorHandler);
+          });
+        } catch (error) {
+          reject(error);
+        }
+      });
+    } catch (error) {
+      this.emit('error', error);
+      throw error;
+    } finally {
+      this.isChangingRoom = false;
     }
+  }
+
+  private async cleanupConnection(): Promise<void> {
+    return new Promise((resolve) => {
+      // Clear intervals and timeouts
+      if (this.keepaliveInterval) {
+        clearInterval(this.keepaliveInterval);
+        this.keepaliveInterval = null;
+      }
+
+      if (this.reconnectTimeout) {
+        clearTimeout(this.reconnectTimeout);
+        this.reconnectTimeout = null;
+      }
+
+      // Close WebSocket if it exists
+      if (this.ws) {
+        // Remove all existing listeners
+        this.ws.removeAllListeners();
+
+        // Add one-time close listener
+        this.ws.once('close', () => {
+          this.ws = null;
+          resolve();
+        });
+
+        // Close the connection
+        this.ws.close();
+      } else {
+        resolve();
+      }
+    });
+  }
+
+  async close(): Promise<void> {
+    await this.cleanupConnection();
+    this.emit('closed');
   }
 
   errorHandler(error: ErrorEvent) {
