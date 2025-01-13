@@ -10,7 +10,7 @@ export interface IMessageHandler {
 }
 
 export class ResponseEventFactory {
-    private handlers: { [key: string]: IMessageHandler };
+    private readonly handlers: { [key: string]: IMessageHandler };
 
     constructor(emitter: EventEmitter) {
         this.handlers = {
@@ -40,7 +40,7 @@ export class ResponseEventFactory {
  */
 
 export class ErrorMessageHandler implements IMessageHandler {
-    private emitter: EventEmitter;
+    private readonly emitter: EventEmitter;
     constructor(emitter: EventEmitter) {
         this.emitter = emitter;
     }
@@ -54,8 +54,8 @@ export class ErrorMessageHandler implements IMessageHandler {
 */
 
 export class SessionMetadataHandler implements IMessageHandler {
-    private emitter: EventEmitter;
-    private cache: HRCache
+    private readonly emitter: EventEmitter;
+    private readonly cache: HRCache
     constructor(emitter: EventEmitter) {
         this.emitter = emitter;
         this.cache = hrCache;
@@ -74,7 +74,7 @@ export class SessionMetadataHandler implements IMessageHandler {
 }
 
 export class AnchorHitResponseHandler implements IMessageHandler {
-    private emitter: EventEmitter;
+    private readonly emitter: EventEmitter;
     constructor(emitter: EventEmitter) {
         this.emitter = emitter;
     }
@@ -87,7 +87,7 @@ export class AnchorHitResponseHandler implements IMessageHandler {
 }
 
 export class ChatEventHandler implements IMessageHandler {
-    private emitter: EventEmitter;
+    private readonly emitter: EventEmitter;
     constructor(emitter: EventEmitter) {
         this.emitter = emitter;
     }
@@ -100,7 +100,7 @@ export class ChatEventHandler implements IMessageHandler {
 }
 
 export class PlayerJoinHandler implements IMessageHandler {
-    private emitter: EventEmitter;
+    private readonly emitter: EventEmitter;
     constructor(emitter: EventEmitter) {
         this.emitter = emitter;
     }
@@ -113,7 +113,7 @@ export class PlayerJoinHandler implements IMessageHandler {
 }
 
 export class PlayerLeftHandler implements IMessageHandler {
-    private emitter: EventEmitter;
+    private readonly emitter: EventEmitter;
     constructor(emitter: EventEmitter) {
         this.emitter = emitter;
     }
@@ -126,7 +126,7 @@ export class PlayerLeftHandler implements IMessageHandler {
 }
 
 export class PlayerMovementHandler implements IMessageHandler {
-    private emitter: EventEmitter;
+    private readonly emitter: EventEmitter;
     constructor(emitter: EventEmitter) {
         this.emitter = emitter;
     }
@@ -139,7 +139,7 @@ export class PlayerMovementHandler implements IMessageHandler {
 }
 
 export class RoomModeraterHander {
-    private emitter: EventEmitter;
+    private readonly emitter: EventEmitter;
     constructor(emitter: EventEmitter) {
         this.emitter = emitter;
     }
@@ -152,7 +152,7 @@ export class RoomModeraterHander {
 }
 
 export class MessageHandler {
-    private emitter: EventEmitter;
+    private readonly emitter: EventEmitter;
     constructor(emitter: EventEmitter) {
         this.emitter = emitter;
     }
@@ -165,7 +165,7 @@ export class MessageHandler {
 }
 
 export class TipReactionHandler {
-    private emitter: EventEmitter;
+    private readonly emitter: EventEmitter;
     constructor(emitter: EventEmitter) {
         this.emitter = emitter;
     }
@@ -178,7 +178,7 @@ export class TipReactionHandler {
 }
 
 export class ChannelHandler {
-    private emitter: EventEmitter;
+    private readonly emitter: EventEmitter;
     constructor(emitter: EventEmitter) {
         this.emitter = emitter;
     }
@@ -191,7 +191,7 @@ export class ChannelHandler {
 }
 
 export class ReactionHandler {
-    private emitter: EventEmitter;
+    private readonly emitter: EventEmitter;
     constructor(emitter: EventEmitter) {
         this.emitter = emitter;
     }

@@ -1,7 +1,7 @@
 import { AnchorHitPayload, ChangeRoomPrevilegePayload, EmotePayload, Facing, FloorHitPayload, GetBackpackResponse, GetRoomPrivilegePayload, GetRoomPrivilegeResponse, GoldBars, ModerateRoomPayload, ModerationAction, ReactionPayload, TeleportPayload, TipUserPayload, UserWithPosition, MoveUserToRoomPayload, Wallet, WalletType, WhisperPayload, InviteSpeakerPayload, RemoveSpeakerPayload, GetUserOutfitPayload, GetUserOutfitResponse, GetConversationsPayload, GetConversationsResponse, SendMessagePayload, MessageType, SendBulkMessagePayload, GetMessagePayload, GetMessageResponse, Message, LeaveConversationPayload, Item, RoomPermission, BuyVoiceTimePayload, PaymentMethod, BuyVoiceTimeResponse, PaymentResult, BuyRoomBoostPayload, BuyRoomBoostResponse, BuyItemPayload, BuyItemResponse, ChannelPayload, SetOutfitPayload, GetInventoryPayload, GetInventoryResponse } from "../../types/types";
 import hrCache from "../../utils/cache";
 import { PayloadError, RequestError, ResponseError } from "../../utils/error";
-import { catchFn, removeCustomKeys } from "../../utils/utils";
+import { catchFn, convertKeysToCamelCase, removeCustomKeys } from "../../utils/utils";
 import { anchorSchema, buyItemSchema, buyRoomBoostSchema, buyVoiceTimeSchema, changeRoomPrivilegesSchema, channelSchema, emoteSchema, floorHitSchema, getConversationSchema, getMessageSchema, getOutfitSchema, getRoomPrivilegeSchema, inviteSpeakerSchema, leaveConverationSchema, moderationSchema, moveUserToRoomSchema, positionSchema, removeSpeakerSchema, roomPermissionSchema, sendBulkMessageSchema, sendMessageSchema, setOutfitSchema, teleportSchema, tipUserSchema, userSchema, validate, validateAndThrow, validateEnum, whisperSchema } from "../../utils/validation";
 import { Highrise } from "../highrise";
 import RequestEventStrategy, { AnchorHitHandler, BuyItemHandler, BuyRoomBoostHandler, BuyVoiceTimeHandler, ChangeRoomPrevilegeHandler, ChannelHandler, ChatHandler, EmoteHandler, FloorHitHandler, GetBackpackHandler, GetConversationsHandler, GetInventoryHandler, GetMessageHandler, GetRoomPrivilegeHandler, GetUserOutfitHandler, InviteSpeakerHandler, LeaveConversationHandler, ModerationHandler, MoveUserToRoomHandler, ReactionHandler, RemoveSpeakerHandler, RequestEventWithPromiseStrategy, RoomUsersHandler, SendBulkMessageHandler, SendMessageHandler, SetOutfitHandler, TeleportHandler, TipUserHandler, WalletHandler } from "./RequestEvent";
@@ -164,14 +164,15 @@ class RequestEvent {
         }
     }
 
-    async getRooomUsers(): Promise<Array<UserWithPosition>> {
+    async getRoomUsers(): Promise<Array<UserWithPosition>> {
         try {
             const userStrategy = new RoomUsersHandler();
             const handler = new RequestEventWithPromiseStrategy(this.hr, userStrategy);
             const response = await handler.execute({});
-            const users: Array<UserWithPosition> = response.content;
-            const modifiedUsers = users.filter(user => user[0].id !== hrCache.get('botUserId'));
-            return modifiedUsers;
+            let users: Array<UserWithPosition> = response.content;
+            users = users.filter(user => user[0].id !== hrCache.get('botUserId'));
+            users = users.map(user => convertKeysToCamelCase(user));
+            return users;
         } catch (error) {
             throw error;
         }
@@ -182,7 +183,7 @@ class RequestEvent {
             if (!username) {
                 throw new PayloadError("username cannot be empty");
             }
-            const users = await this.getRooomUsers();
+            const users = await this.getRoomUsers();
             const user = users.find((userData: UserWithPosition) => userData[0].username === username);
             if (!user) {
                 throw new RequestError(`User with username "${username}" not found`);
@@ -199,7 +200,7 @@ class RequestEvent {
             if (!userId) {
                 throw new PayloadError("userId cannot be empty");
             }
-            const users = await this.getRooomUsers();
+            const users = await this.getRoomUsers();
             const user = users.find((userData: UserWithPosition) => userData[0].id === userId);
             if (!user) {
                 throw new RequestError(`User with userId "${userId}" not found`);
