@@ -57,7 +57,7 @@ export class Highrise extends EventEmitter {
     });
 
     this.once(eventResponse.Error, (error: any) => {
-      if (error.message.includes('Multilogin')) {
+      if (error?.message?.includes('Multilogin')) {
         console.log('Multilogin detected, handling reconnection...');
         this.cleanupConnection().then(() => {
           setTimeout(() => {

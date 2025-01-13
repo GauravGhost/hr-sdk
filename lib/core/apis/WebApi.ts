@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from 'axios';
 import { constant } from '../../utils/constant';
 
 class WebApi {
-    private baseUrl: string;
+    private readonly baseUrl: string;
     sort_order: Array<string>;
     constructor() {
         this.baseUrl = constant.WEB_API_ENDPOINT;
