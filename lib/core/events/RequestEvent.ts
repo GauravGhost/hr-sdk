@@ -35,7 +35,7 @@ export interface RequestStrategy {
 }
 
 class RequestEventStrategy {
-    constructor(private hr: Highrise, private strategy: RequestStrategy) { }
+    constructor(private readonly hr: Highrise, private readonly strategy: RequestStrategy) { }
 
     execute(incomingPayload: any) {
         if (this.hr.ws && this.hr.ws.readyState === this.hr.ws.OPEN) {
@@ -48,7 +48,7 @@ class RequestEventStrategy {
 }
 
 export class RequestEventWithPromiseStrategy {
-    constructor(private hr: Highrise, private strategy: RequestStrategy) { }
+    constructor(private readonly hr: Highrise, private readonly strategy: RequestStrategy) { }
 
     async execute(incomingPayload: any): Promise<any> {
         if (this.hr.ws && this.hr.ws.readyState === this.hr.ws.OPEN) {

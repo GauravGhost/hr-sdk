@@ -137,7 +137,7 @@ export interface RoomInfo {
 
 export interface AnchorPosition {
     entityId: string;
-    anchor_id: number;
+    anchorId: number;
 }
 
 export interface EmotePayload {
@@ -166,7 +166,7 @@ export interface WhisperPayload {
 
 export interface AnchorHitPayload {
     entityId: string,
-    anchorIx: number,
+    anchorIx?: number,
 }
 
 export interface FloorHitPayload extends Position {
