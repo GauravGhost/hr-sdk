@@ -273,8 +273,8 @@ export interface GetConversationsResponse {
 interface MessagePayload {
     content: string;
     type: MessageType
-    roomId: string | null;
-    worldId: string | null;
+    roomId?: string;
+    worldId?: string;
 }
 
 export interface SendMessagePayload extends MessagePayload {
