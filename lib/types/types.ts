@@ -261,8 +261,8 @@ export interface GetUserOutfitResponse {
 export interface SetUserOutfitPayload { }
 
 export interface GetConversationsPayload {
-    notJoined: boolean;
-    lastId: string;
+    notJoined?: boolean;
+    lastId?: string;
 }
 
 export interface GetConversationsResponse {
@@ -287,7 +287,7 @@ export interface SendBulkMessagePayload extends MessagePayload {
 
 export interface GetMessagePayload {
     conversationId: string;
-    lastMessageId: string | null;
+    lastMessageId?: string | null;
 }
 
 export interface GetMessageResponse {
