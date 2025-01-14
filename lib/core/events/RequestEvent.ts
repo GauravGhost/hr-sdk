@@ -1,6 +1,6 @@
 import { PayloadError, WebSocketError } from "../../utils/error";
 import { Highrise } from "../highrise";
-import { generateRid } from "../../utils/utils";
+import { convertKeysToCamelCase, generateRid } from "../../utils/utils";
 import { eventRequest } from "../../utils/constant";
 import {
     AnchorHitPayload,
@@ -60,7 +60,7 @@ export class RequestEventWithPromiseStrategy {
 
                     if (messageObject.rid === payload.rid) {
                         this.hr.ws!.removeEventListener('message', messageHandler);
-                        resolve(messageObject);
+                        resolve(convertKeysToCamelCase(messageObject));
                     }
                 };
 

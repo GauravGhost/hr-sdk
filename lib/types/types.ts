@@ -114,6 +114,7 @@ export interface Conversation {
     didJoin: boolean;
     unreadCount: number;
     muted: boolean;
+    lastMessage: Message;
     memberIds: string[];
     name: string;
     ownerId: string;
@@ -291,7 +292,7 @@ export interface GetMessagePayload {
 }
 
 export interface GetMessageResponse {
-    messages: Message;
+    messages: Message[];
 }
 
 export interface LeaveConversationPayload {

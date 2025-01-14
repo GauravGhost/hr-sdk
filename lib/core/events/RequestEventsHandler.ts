@@ -171,7 +171,6 @@ class RequestEvent {
             const response = await handler.execute({});
             let users: Array<UserWithPosition> = response.content;
             users = users.filter(user => user[0].id !== hrCache.get('botUserId'));
-            users = users.map(user => convertKeysToCamelCase(user));
             return users;
         } catch (error) {
             throw error;
@@ -395,7 +394,7 @@ class RequestEvent {
         }
     });
 
-    getMessage = (async (data: GetMessagePayload): Promise<Message> => {
+    getMessage = (async (data: GetMessagePayload): Promise<Message[]> => {
         try {
             validateAndThrow(validate(data, getMessageSchema));
 

@@ -1,6 +1,6 @@
 {
   "name": "hr-sdk",
-  "version": "0.0.16",
+  "version": "0.0.19",
   "description": "A JavaScript library for Highrise bot.",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -22,7 +22,8 @@
     "highrise-js-sdk",
     "highrise-sdk",
     "chatbot",
-    "sdk"
+    "sdk",
+    "hr-sdk"
   ],
   "author": "Gyanendra Kumar",
   "license": "MIT",

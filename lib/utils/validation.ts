@@ -77,6 +77,7 @@ export const conversationSchema: ValidationSchema<Conversation> = {
     id: option.required,
     didJoin: option.required,
     unreadCount: option.required,
+    lastMessage: option.required,
     muted: option.required,
     memberIds: option.required,
     name: option.required,
