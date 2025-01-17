@@ -197,7 +197,7 @@ export const getMessageSchema: ValidationSchema<GetMessagePayload> = {
     lastMessageId: option.optional
 }
 
-export const leaveConverationSchema: ValidationSchema<LeaveConversationPayload> = {
+export const leaveConversationSchema: ValidationSchema<LeaveConversationPayload> = {
     conversationId: option.required,
 }
 

@@ -1,15 +1,15 @@
 import { AnchorHitPayload, ChangeRoomPrevilegePayload, EmotePayload, Facing, FloorHitPayload, GetBackpackResponse, GetRoomPrivilegePayload, GetRoomPrivilegeResponse, GoldBars, ModerateRoomPayload, ModerationAction, ReactionPayload, TeleportPayload, TipUserPayload, UserWithPosition, MoveUserToRoomPayload, Wallet, WalletType, WhisperPayload, InviteSpeakerPayload, RemoveSpeakerPayload, GetUserOutfitPayload, GetUserOutfitResponse, GetConversationsPayload, GetConversationsResponse, SendMessagePayload, MessageType, SendBulkMessagePayload, GetMessagePayload, GetMessageResponse, Message, LeaveConversationPayload, Item, RoomPermission, BuyVoiceTimePayload, PaymentMethod, BuyVoiceTimeResponse, PaymentResult, BuyRoomBoostPayload, BuyRoomBoostResponse, BuyItemPayload, BuyItemResponse, ChannelPayload, SetOutfitPayload, GetInventoryPayload, GetInventoryResponse } from "../../types/types";
 import hrCache from "../../utils/cache";
 import { PayloadError, RequestError, ResponseError } from "../../utils/error";
-import { catchFn, convertKeysToCamelCase, removeCustomKeys } from "../../utils/utils";
-import { anchorSchema, buyItemSchema, buyRoomBoostSchema, buyVoiceTimeSchema, changeRoomPrivilegesSchema, channelSchema, emoteSchema, floorHitSchema, getConversationSchema, getMessageSchema, getOutfitSchema, getRoomPrivilegeSchema, inviteSpeakerSchema, leaveConverationSchema, moderationSchema, moveUserToRoomSchema, positionSchema, removeSpeakerSchema, roomPermissionSchema, sendBulkMessageSchema, sendMessageSchema, setOutfitSchema, teleportSchema, tipUserSchema, userSchema, validate, validateAndThrow, validateEnum, whisperSchema } from "../../utils/validation";
+import { convertKeysToCamelCase, removeCustomKeys } from "../../utils/utils";
+import { anchorSchema, buyItemSchema, buyRoomBoostSchema, buyVoiceTimeSchema, changeRoomPrivilegesSchema, channelSchema, emoteSchema, floorHitSchema, getConversationSchema, getMessageSchema, getOutfitSchema, getRoomPrivilegeSchema, inviteSpeakerSchema, leaveConversationSchema, moderationSchema, moveUserToRoomSchema, positionSchema, removeSpeakerSchema, roomPermissionSchema, sendBulkMessageSchema, sendMessageSchema, setOutfitSchema, teleportSchema, tipUserSchema, userSchema, validate, validateAndThrow, validateEnum, whisperSchema } from "../../utils/validation";
 import { Highrise } from "../highrise";
 import RequestEventStrategy, { AnchorHitHandler, BuyItemHandler, BuyRoomBoostHandler, BuyVoiceTimeHandler, ChangeRoomPrevilegeHandler, ChannelHandler, ChatHandler, EmoteHandler, FloorHitHandler, GetBackpackHandler, GetConversationsHandler, GetInventoryHandler, GetMessageHandler, GetRoomPrivilegeHandler, GetUserOutfitHandler, InviteSpeakerHandler, LeaveConversationHandler, ModerationHandler, MoveUserToRoomHandler, ReactionHandler, RemoveSpeakerHandler, RequestEventWithPromiseStrategy, RoomUsersHandler, SendBulkMessageHandler, SendMessageHandler, SetOutfitHandler, TeleportHandler, TipUserHandler, WalletHandler } from "./RequestEvent";
 
 
 
 class RequestEvent {
-    constructor(private hr: Highrise) {
+    constructor(private readonly hr: Highrise) {
     }
     broadcastMessage(message: string): void {
         try {
@@ -351,12 +351,12 @@ class RequestEvent {
         }
     };
 
-    async getConveration(data: GetConversationsPayload) {
+    async getConversation(data: GetConversationsPayload) {
         try {
             validateAndThrow(validate(data, getConversationSchema));
 
-            const getConverationStragety = new GetConversationsHandler();
-            const handler = new RequestEventWithPromiseStrategy(this.hr, getConverationStragety);
+            const getConversationStrategy = new GetConversationsHandler();
+            const handler = new RequestEventWithPromiseStrategy(this.hr, getConversationStrategy);
             const response = await handler.execute(data);
             const newResponse: GetConversationsResponse = removeCustomKeys(response);
             return newResponse;
@@ -408,12 +408,12 @@ class RequestEvent {
         }
     });
 
-    leaveConveration = ((data: LeaveConversationPayload): void => {
+    leaveConversation = ((data: LeaveConversationPayload): void => {
         try {
-            validateAndThrow(validate(data, leaveConverationSchema));
+            validateAndThrow(validate(data, leaveConversationSchema));
 
-            const leaveConverationStrategy = new LeaveConversationHandler();
-            const handler = new RequestEventStrategy(this.hr, leaveConverationStrategy);
+            const leaveConversationStrategy = new LeaveConversationHandler();
+            const handler = new RequestEventStrategy(this.hr, leaveConversationStrategy);
             handler.execute(data);
 
         } catch (error) {
