@@ -426,3 +426,66 @@ export interface RoomModeratedEvent {
     moderationType: ModerationAction;
     duration: number | null;
 }
+
+/**
+ * ================== Web Api ==================
+ */
+export interface RoomResponse {
+    roomId: string;
+    dispName: string;
+    createdAt: string;
+    accessPolicy: string;
+    category: string;
+    ownerId?: string | null;
+    locale: string[];
+    isHomeRoom?: boolean | null;
+    numConnected: number;
+    moderatorIds: string[];
+    designerIds: string[];
+    description?: string | null;
+    crewId?: string | null;
+    bots?: string | null;
+    indicators?: string | null;
+    thumbnailUrl?: string | null;
+    bannerUrl?: string | null;
+}
+
+export interface UserResponse {
+    userId: string;
+    username: string;
+    outfit: Array<Outfit>;
+    bio: string;
+    lastOnlineIn?: null;
+    numFollowers: number;
+    numFollowing: number;
+    numFriends: number;
+    activeRoom?: ActiveRoomInfo | null;
+    countryCode: string;
+    crew?: Crew | null;
+    voiceEnabled: boolean;
+    discordId?: string | null;
+}
+
+interface Outfit {
+    itemId: string;
+    name: string;
+    rarity: string;
+    activePalette: number;
+    parts: number;
+    colors?: OutfitItemColors | null;
+    linkedColors: string;
+}
+interface OutfitItemColors {
+    linkedColors: string
+}
+
+interface ActiveRoomInfo {
+    id: string;
+    displayName: string;
+    codeName?: string | null;
+}
+
+interface Crew {
+    id: string;
+    name: string;
+}
