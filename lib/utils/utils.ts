@@ -8,6 +8,18 @@ function toCamelCase(str: string): string {
 }
 
 /**
+ * Converts a string from camelCase to snake_case
+ * @param {string} str - The string to convert
+ * @returns {string} The converted snake_case string
+ */
+export function toSnakeCase(str: string): string {
+  return str
+    .replace(/([A-Z])/g, '_$1')
+    .toLowerCase()
+    .replace(/^_/, '');
+}
+
+/**
  * 
  * @param {object} data - Data which contains the key which will be removed 
  * @param {Array<string>} keys - List of key which needs to be removed, It is optional.
@@ -26,6 +38,25 @@ export function convertKeysToCamelCase(obj: any): any {
     return Object.keys(obj).reduce((acc, key) => {
       const newKey = toCamelCase(key);
       acc[newKey] = convertKeysToCamelCase(obj[key]);
+      return acc;
+    }, {} as any);
+  } else {
+    return obj;
+  }
+}
+
+/**
+ * Recursively converts all object keys from camelCase to snake_case
+ * @param {any} obj - The object whose keys need to be converted
+ * @returns {any} A new object with all keys converted to snake_case
+ */
+export function convertKeysToSnakeCase(obj: any): any {
+  if (Array.isArray(obj)) {
+    return obj.map(v => convertKeysToSnakeCase(v));
+  } else if (obj !== null && typeof obj === 'object') {
+    return Object.keys(obj).reduce((acc, key) => {
+      const newKey = toSnakeCase(key);
+      acc[newKey] = convertKeysToSnakeCase(obj[key]);
       return acc;
     }, {} as any);
   } else {
@@ -52,4 +83,3 @@ export function catchFn<T>(fn: SyncFunction<T> | AsyncFunction<T>): (...args: an
     }
   };
 }
-

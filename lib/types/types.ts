@@ -82,7 +82,7 @@ export interface Position {
 }
 
 export interface Item {
-    type: Array<string>
+    type: string
     amount: number;
     id: string;
     accountBound: boolean

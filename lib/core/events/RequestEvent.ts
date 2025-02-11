@@ -1,6 +1,6 @@
 import { PayloadError, WebSocketError } from "../../utils/error";
 import { Highrise } from "../highrise";
-import { convertKeysToCamelCase, generateRid } from "../../utils/utils";
+import { convertKeysToCamelCase, convertKeysToSnakeCase, generateRid } from "../../utils/utils";
 import { eventRequest } from "../../utils/constant";
 import {
     AnchorHitPayload,
@@ -419,9 +419,10 @@ export class GetInventoryHandler implements RequestStrategy {
 
 export class SetOutfitHandler implements RequestStrategy {
     createPayload(data: SetOutfitPayload): object {
+        const outfitPayload = convertKeysToSnakeCase(data.outfit);
         const payload = {
             _type: eventRequest.SetOutfitRequest,
-            outfit: data.outfit,
+            outfit: outfitPayload,
             rid: null,
         }
         return payload;
