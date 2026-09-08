@@ -31,7 +31,8 @@ export const eventRequest = {
     SendMessageRequest: "SendMessageRequest",
     SetOutfitRequest: "SetOutfitRequest",
     TeleportRequest: "TeleportRequest",
-    TipUserRequest: "TipUserRequest"
+    TipUserRequest: "TipUserRequest",
+    MessageMediaRequest: "MessageMediaRequest"
 };
 
 export const eventResponse = {
@@ -65,6 +66,7 @@ export const eventResponse = {
     RoomModeratedEvent: 'RoomModeratedEvent',
     SendBulkMessageResponse: 'SendBulkMessageResponse',
     SendMessageResponse: 'SendMessageResponse',
+    MessageMediaResponse: 'MessageMediaResponse',
     SessionMetadata: 'SessionMetadata',
     SetOutfitResponse: 'SetOutfitResponse',
     TeleportResponse: 'TeleportResponse',

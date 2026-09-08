@@ -349,6 +349,27 @@ export interface RateLimit {
     socials: Array<number>;
 }
 
+export interface MessageMedia {
+    type: "image" | "gif";
+    width: number;
+    height: number;
+    mediaSizeInBytes: number;
+    thumbnailSizeInBytes: number;
+    id?: string | null;
+    url?: string | null;
+    thumbnailUrl?: string | null;
+}
+
+export interface MessageMediaPayload {
+    media: MessageMedia;
+}
+
+export interface MessageMediaResponse {
+    media: MessageMedia;
+    uploadUrl: string | null;
+    thumbnailUploadUrl: string | null;
+}
+
 /**
  * ================== Events ==================
  */

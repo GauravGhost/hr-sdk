@@ -19,6 +19,7 @@ import {
     GetRoomPrivilegePayload,
     InviteSpeakerPayload,
     LeaveConversationPayload,
+    MessageMediaPayload,
     ModerateRoomPayload,
     MoveUserToRoomPayload,
     ReactionPayload,
@@ -66,7 +67,7 @@ export class RequestEventWithPromiseStrategy {
 
                 this.hr.ws!.addEventListener('message', messageHandler);
 
-                this.hr.ws!.send(JSON.stringify(payload), (error) => {
+                this.hr.ws!.send(JSON.stringify(payload), (error: any) => {
                     if (error) {
                         reject(error);
                     }
@@ -449,5 +450,16 @@ export class ModerationHandler implements RequestStrategy {
             action_length: data.actionLength,
             rid: null,
         }
+    }
+}
+
+export class MessageMediaHandler implements RequestStrategy {
+    createPayload(data: MessageMediaPayload): object {
+        const payload = {
+            _type: eventRequest.MessageMediaRequest,
+            media: data.media,
+            rid: generateRid(),
+        }
+        return payload;
     }
 }

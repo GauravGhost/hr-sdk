@@ -1,5 +1,5 @@
 import { SendBulkMessageHandler } from "../core/events/RequestEvent";
-import { AnchorHitPayload, BuyItemPayload, BuyRoomBoostPayload, BuyVoiceTimePayload, ChangeRoomPrevilegePayload, ChannelPayload, Conversation, CurrencyItem, EmotePayload, FloorHitPayload, GetConversationsPayload, GetMessagePayload, GetRoomPrivilegePayload, GetUserOutfitPayload, InviteSpeakerPayload, Item, LeaveConversationPayload, Message, ModerateRoomPayload, ModerationAction, MoveUserToRoomPayload, Position, RemoveSpeakerPayload, RoomPermission, RoomPermissionType, SendBulkMessagePayload, SendMessagePayload, SetOutfitPayload, TeleportPayload, TipUserPayload, User, Wallet, WhisperPayload } from "../types/types";
+import { AnchorHitPayload, BuyItemPayload, BuyRoomBoostPayload, BuyVoiceTimePayload, ChangeRoomPrevilegePayload, ChannelPayload, Conversation, CurrencyItem, EmotePayload, FloorHitPayload, GetConversationsPayload, GetMessagePayload, GetRoomPrivilegePayload, GetUserOutfitPayload, InviteSpeakerPayload, Item, LeaveConversationPayload, Message, MessageMediaPayload, ModerateRoomPayload, ModerationAction, MoveUserToRoomPayload, Position, RemoveSpeakerPayload, RoomPermission, RoomPermissionType, SendBulkMessagePayload, SendMessagePayload, SetOutfitPayload, TeleportPayload, TipUserPayload, User, Wallet, WhisperPayload } from "../types/types";
 import { PayloadError } from "./error";
 
 type ValidationSchema<T> = {
@@ -214,4 +214,8 @@ export const channelSchema: ValidationSchema<ChannelPayload> = {
     message: option.required,
     onlyTo: option.optional,
     tags: option.required
+}
+
+export const messageMediaSchema: ValidationSchema<MessageMediaPayload> = {
+    media: option.required
 }
